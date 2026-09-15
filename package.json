@@ -1,0 +1,33 @@
+{
+  "name": "zenyukti-labs",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Open-source, 100% client-side developer tools. Monorepo: one workspace per tool.",
+  "license": "MIT",
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev:qr": "npm run dev --workspace=apps/qr",
+    "dev:json": "npm run dev --workspace=apps/json",
+    "dev:og": "npm run dev --workspace=apps/og-preview",
+    "dev:utm": "npm run dev --workspace=apps/utm",
+    "dev:image": "npm run dev --workspace=apps/image",
+    "dev:favicon": "npm run dev --workspace=apps/favicon",
+    "dev:readme": "npm run dev --workspace=apps/readme",
+    "dev:all": "concurrently -n qr,json,og,utm,image,favicon,readme -c magenta,yellow,cyan,green,red,white,gray \"npm run dev --workspace=apps/qr\" \"npm run dev --workspace=apps/json\" \"npm run dev --workspace=apps/og-preview\" \"npm run dev --workspace=apps/utm\" \"npm run dev --workspace=apps/image\" \"npm run dev --workspace=apps/favicon\" \"npm run dev --workspace=apps/readme\"",
+    "build:qr": "npm run build --workspace=apps/qr",
+    "build:json": "npm run build --workspace=apps/json",
+    "build:og": "npm run build --workspace=apps/og-preview",
+    "build:utm": "npm run build --workspace=apps/utm",
+    "build:image": "npm run build --workspace=apps/image",
+    "build:favicon": "npm run build --workspace=apps/favicon",
+    "build:readme": "npm run build --workspace=apps/readme",
+    "build:all": "npm run build --workspaces --if-present",
+    "clean": "rm -rf apps/*/dist"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
