@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OG Preview Tool - Free Open Graph Preview Tool | Offline & Open Source</title>
+<meta name="description" content="Preview how your page looks on Google, Slack, Twitter/X, LinkedIn, Facebook and WhatsApp. Edit Open Graph tags live and copy the generated meta code.">
+<link rel="canonical" href="https://og-preview.zenyukti.in/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ZenYukti Labs">
+<meta property="og:title" content="OG Preview - Free Open Graph Card Preview">
+<meta property="og:description" content="Preview how your page looks on Google, Slack, Twitter/X, LinkedIn, Facebook and WhatsApp. Edit Open Graph tags live and copy the generated meta code.">
+<meta property="og:url" content="https://og-preview.zenyukti.in/">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "OG Preview", "url": "https://og-preview.zenyukti.in", "description": "Preview how your page looks on Google, Slack, Twitter/X, LinkedIn, Facebook and WhatsApp. Edit Open Graph tags live and copy the generated meta code.", "applicationCategory": "DeveloperApplication", "operatingSystem": "Any", "browserRequirements": "Requires a modern browser with JavaScript enabled.", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "author": {"@type": "Organization", "name": "ZenYukti Labs", "url": "https://zenyukti.in"}}</script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<style type="text/tailwindcss">
+body{font-family:Inter,system-ui,sans-serif;@apply bg-slate-50 text-slate-900}
+.inp{@apply w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-slate-900}
+.btn{@apply rounded-xl bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700}
+.card{@apply rounded-2xl border border-slate-200 bg-white p-5}
+.lbl{@apply mb-1 mt-3 block text-xs font-medium text-slate-500}
+</style></head>
+<body>
+<header class="border-b bg-white"><div class="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
+<a href="https://zenyukti.in" class="font-semibold">ZenYukti Labs</a>
+<div class="flex items-center gap-3 text-sm"><span class="rounded-full bg-emerald-50 text-emerald-700 px-3 py-1 text-xs font-medium">100% Private</span><a class="text-slate-600 hover:text-slate-900" href="https://github.com/ZenYukti">GitHub</a></div></div></header>
+<main class="max-w-6xl mx-auto px-4 py-10">
+<h1 class="text-3xl md:text-4xl font-bold tracking-tight">OG Preview Tool</h1>
+<p class="mt-2 text-slate-600 max-w-2xl">Fetch any URL or paste your HTML head, edit the tags, and see live previews on six platforms. Runs in your browser.</p>
+
+<div class="grid lg:grid-cols-2 gap-6 mt-8">
+<div class="card">
+ <label class="lbl !mt-0">Page URL</label>
+ <div class="flex gap-2"><input id="url" class="inp" placeholder="https://example.com"><button id="fetch" class="btn">Fetch</button></div>
+ <p id="status" class="text-xs text-slate-500 mt-2"></p>
+ <label class="lbl">…or paste HTML head</label>
+ <textarea id="html" rows="4" class="inp font-mono text-xs" placeholder="<head>…</head>"></textarea>
+ <button id="parse" class="btn mt-2 !bg-white !text-slate-900 border border-slate-200 hover:!bg-slate-100">Parse HTML</button>
+ <hr class="my-5">
+ <div id="fields"></div>
+</div>
+<div class="space-y-4" id="previews"></div>
+</div>
+
+<section class="card mt-6"><div class="flex justify-between items-center"><h2 class="font-semibold">Generated meta tags</h2><button id="copy" class="btn">Copy</button></div>
+<pre id="code" class="mt-3 overflow-auto rounded-xl bg-slate-900 text-slate-100 p-4 text-xs"></pre></section>
+
+<section class="mt-16"><h2 class="text-2xl font-bold mb-4">FAQ</h2><div class="space-y-3">
+<details class="card"><summary class="font-medium cursor-pointer">What is Open Graph?</summary><p class="mt-2 text-sm text-slate-600">Open Graph is a set of meta tags that controls the title, description and image shown when a link is shared on social platforms.</p></details>
+<details class="card"><summary class="font-medium cursor-pointer">Why use a CORS proxy to fetch URLs?</summary><p class="mt-2 text-sm text-slate-600">Browsers block cross-origin reads, so we try public proxies (allorigins, corsproxy.io). You can always paste the HTML head instead, which stays fully local.</p></details>
+<details class="card"><summary class="font-medium cursor-pointer">What is the ideal og:image size?</summary><p class="mt-2 text-sm text-slate-600">1200×630 pixels (1.91:1), under 5 MB, in JPG or PNG.</p></details>
+<details class="card"><summary class="font-medium cursor-pointer">Is my data sent anywhere?</summary><p class="mt-2 text-sm text-slate-600">No. Only the URL fetch goes through a CORS proxy. Pasted HTML and edits never leave your browser.</p></details>
+<details class="card"><summary class="font-medium cursor-pointer">Why does my preview look different on the real platform?</summary><p class="mt-2 text-sm text-slate-600">Platforms cache scraped data and tweak their layouts. These previews are close approximations; use each platform's debugger to refresh the cache.</p></details>
+</div></section>
+</main>
+<footer class="border-t bg-white mt-16"><div class="max-w-6xl mx-auto px-4 py-8 text-sm text-slate-500 space-y-2">
+<p>Built by ZenYukti Labs • Open Source MIT</p>
+<p class="flex flex-wrap gap-4"><a href="https://zenyukti.in" class="hover:text-slate-900">zenyukti.in</a><a href="https://github.com/zenyukti-labs/dev-tools" class="hover:text-slate-900">GitHub</a><a href="https://go.zenyukti.in/discord" class="hover:text-slate-900">go.zenyukti.in/discord</a><a href="https://twitter.com/zenyukti" class="hover:text-slate-900">@zenyukti</a></p>
+</div></footer>
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const S={title:'ZenYukti Labs – Open-source tools',desc:'Free, private, client-side developer tools.',ogTitle:'ZenYukti Labs',ogDesc:'Open-source tools that respect your privacy.',ogImage:'',ogUrl:'https://og-preview.zenyukti.in',twitterCard:'summary_large_image',siteName:'ZenYukti Labs',favicon:''};
+const LABELS={title:'Title',desc:'Meta description',ogTitle:'og:title',ogDesc:'og:description',ogImage:'og:image',ogUrl:'og:url',twitterCard:'twitter:card',siteName:'og:site_name'};
+let base='';
+function parse(html){
+ const d=new DOMParser().parseFromString(html,'text/html');
+ const m=k=>{const e=d.querySelector(`meta[property="${k}"],meta[name="${k}"]`);return e?(e.getAttribute('content')||''):''};
+ const ic=d.querySelector('link[rel~="icon"]');
+ const abs=v=>{try{return v?new URL(v,base||undefined).href:''}catch{return v}};
+ Object.assign(S,{title:d.title||'',desc:m('description'),ogTitle:m('og:title'),ogDesc:m('og:description'),ogImage:abs(m('og:image')),ogUrl:m('og:url')||base,twitterCard:m('twitter:card')||'summary_large_image',siteName:m('og:site_name'),favicon:ic?abs(ic.getAttribute('href')):''});
+}
+function buildFields(){
+ $('#fields').innerHTML=Object.keys(LABELS).map(k=>`<label class="lbl">${LABELS[k]}</label>`+(k==='twitterCard'?`<select class="inp" data-k="${k}"><option>summary_large_image</option><option>summary</option></select>`:(k==='desc'||k==='ogDesc'?`<textarea rows="2" class="inp" data-k="${k}"></textarea>`:`<input class="inp" data-k="${k}">`))).join('');
+ document.querySelectorAll('[data-k]').forEach(e=>{e.value=S[e.dataset.k]||'';e.oninput=()=>{S[e.dataset.k]=e.value;render()}});
+}
+function host(){try{return new URL(S.ogUrl||base).hostname}catch{return 'example.com'}}
+function img(cls){return S.ogImage?`<img src="${esc(S.ogImage)}" class="${cls} object-cover w-full" onerror="this.style.display='none'">`:`<div class="${cls} w-full bg-slate-200 grid place-items-center text-xs text-slate-400">No image</div>`}
+function render(){
+ const t=S.ogTitle||S.title,d=S.ogDesc||S.desc,h=host(),big=S.twitterCard==='summary_large_image';
+ const box=(n,inner)=>`<div class="card"><p class="text-xs font-medium text-slate-500 mb-3">${n}</p>${inner}</div>`;
+ $('#previews').innerHTML=
+ box('Google SERP',`<div class="text-xs text-slate-600">${esc(h)}</div><div class="text-lg text-blue-700 leading-snug">${esc(S.title||t)}</div><div class="text-sm text-slate-600 line-clamp-2">${esc(S.desc||d)}</div>`)+
+ box('Slack',`<div class="border-l-4 border-slate-300 pl-3"><div class="text-xs font-bold">${esc(S.siteName||h)}</div><div class="text-sm font-bold text-blue-700">${esc(t)}</div><div class="text-sm">${esc(d)}</div>${img('mt-2 rounded-lg h-40 max-w-sm')}</div>`)+
+ box('Twitter / X',`<div class="rounded-2xl overflow-hidden border ${big?'':'flex'}">${img(big?'h-48':'h-24 w-24 shrink-0 !w-24')}<div class="p-3"><div class="text-xs text-slate-500">${esc(h)}</div><div class="text-sm font-medium">${esc(t)}</div><div class="text-xs text-slate-500 line-clamp-2">${esc(d)}</div></div></div>`)+
+ box('LinkedIn',`<div class="border rounded-lg overflow-hidden">${img('h-44')}<div class="p-3 bg-slate-50"><div class="text-sm font-semibold">${esc(t)}</div><div class="text-xs text-slate-500">${esc(h)}</div></div></div>`)+
+ box('Facebook',`<div class="border overflow-hidden">${img('h-48')}<div class="p-3 bg-slate-100"><div class="text-xs uppercase text-slate-500">${esc(h)}</div><div class="font-semibold">${esc(t)}</div><div class="text-sm text-slate-600 line-clamp-2">${esc(d)}</div></div></div>`)+
+ box('WhatsApp',`<div class="bg-emerald-50 rounded-xl p-2 max-w-sm"><div class="bg-white rounded-lg overflow-hidden">${img('h-36')}<div class="p-2"><div class="text-sm font-medium">${esc(t)}</div><div class="text-xs text-slate-500 line-clamp-2">${esc(d)}</div><div class="text-xs text-slate-400">${esc(h)}</div></div></div></div>`);
+ const L=[`<title>${esc(S.title)}</title>`,`<meta name="description" content="${esc(S.desc)}">`,`<meta property="og:type" content="website">`,`<meta property="og:title" content="${esc(S.ogTitle)}">`,`<meta property="og:description" content="${esc(S.ogDesc)}">`,S.ogImage&&`<meta property="og:image" content="${esc(S.ogImage)}">`,`<meta property="og:url" content="${esc(S.ogUrl)}">`,S.siteName&&`<meta property="og:site_name" content="${esc(S.siteName)}">`,`<meta name="twitter:card" content="${esc(S.twitterCard)}">`,`<meta name="twitter:title" content="${esc(S.ogTitle)}">`,`<meta name="twitter:description" content="${esc(S.ogDesc)}">`,S.ogImage&&`<meta name="twitter:image" content="${esc(S.ogImage)}">`].filter(Boolean);
+ $('#code').textContent=L.join('\n').replace(/&amp;/g,'&').replace(/&quot;/g,'"').replace(/&lt;title>/,'<title>');
+ $('#code').textContent=L.map(l=>l.replace(/&quot;/g,'&quot;')).join('\n');
+}
+$('#fetch').onclick=async()=>{
+ const url=$('#url').value.trim();if(!url)return;base=url;$('#status').textContent='Fetching…';
+ let text='',r,r2;
+ try{r=await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`);if(r.ok)text=await r.text();}catch{}
+ if(!text)try{r2=await fetch(`https://corsproxy.io/?${encodeURIComponent(url)}`);if(r2.ok)text=await r2.text();}catch{}
+ if(!text){$('#status').textContent='Could not fetch (proxies blocked). Paste the HTML head below instead.';return}
+ parse(text);buildFields();render();$('#status').textContent='Fetched ✓';
+};
+$('#parse').onclick=()=>{parse($('#html').value);buildFields();render()};
+$('#copy').onclick=e=>{navigator.clipboard.writeText($('#code').textContent);e.target.textContent='Copied!';setTimeout(()=>e.target.textContent='Copy',1200)};
+buildFields();render();
+</script></body></html>
