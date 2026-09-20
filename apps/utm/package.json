@@ -1,0 +1,16 @@
+{
+  "name": "@zenyukti/utm-builder",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "UTM Builder - Free UTM Campaign URL Builder - utm-builder.zenyukti.in",
+  "license": "MIT",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^5.4.10"
+  }
+}
