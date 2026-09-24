@@ -1,0 +1,16 @@
+{
+  "name": "@zenyukti/favicon-generator",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Favicon Generator - Free Favicon Generator for Website - favicon-generator.zenyukti.in",
+  "license": "MIT",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^5.4.10"
+  }
+}
