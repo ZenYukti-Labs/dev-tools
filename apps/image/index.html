@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Image Optimizer - Free Image Compressor & Converter | Offline & Open Source</title>
+<meta name="description" content="Compress, resize and convert images to WebP, AVIF, PNG or JPEG right in your browser. Nothing is uploaded.">
+<link rel="canonical" href="https://image-optimizer.zenyukti.in/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ZenYukti Labs">
+<meta property="og:title" content="Image Optimizer - Compress & Convert Images">
+<meta property="og:description" content="Compress, resize and convert images to WebP, AVIF, PNG or JPEG right in your browser. Nothing is uploaded.">
+<meta property="og:url" content="https://image-optimizer.zenyukti.in/">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "Image Optimizer", "url": "https://image-optimizer.zenyukti.in", "description": "Compress, resize and convert images to WebP, AVIF, PNG or JPEG right in your browser. Nothing is uploaded.", "applicationCategory": "MultimediaApplication", "operatingSystem": "Any", "browserRequirements": "Requires a modern browser with JavaScript enabled.", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "author": {"@type": "Organization", "name": "ZenYukti Labs", "url": "https://zenyukti.in"}}</script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<style type="text/tailwindcss">
+body{font-family:Inter,system-ui,sans-serif;@apply bg-slate-50 text-slate-900}
+.inp{@apply w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-slate-900}
+.btn{@apply rounded-xl bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700 disabled:opacity-40}
+.card{@apply rounded-2xl border border-slate-200 bg-white p-5}
+.lbl{@apply mb-1 mt-4 block text-xs font-medium text-slate-500}
+</style></head>
+<body>
+<header class="border-b bg-white"><div class="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
+<a href="https://zenyukti.in" class="font-semibold">ZenYukti Labs</a>
+<div class="flex items-center gap-3 text-sm"><span class="rounded-full bg-emerald-50 text-emerald-700 px-3 py-1 text-xs font-medium">100% Private</span><a class="text-slate-600 hover:text-slate-900" href="https://github.com/ZenYukti">GitHub</a></div></div></header>
+<main class="max-w-6xl mx-auto px-4 py-10">
+<h1 class="text-3xl md:text-4xl font-bold tracking-tight">Free Image Compressor & Converter</h1>
+<p class="mt-2 text-slate-600 max-w-2xl">Shrink, resize and convert PNG, JPG and WebP images using your browser's canvas. No uploads.</p>
+<div id="drop" class="mt-8 rounded-2xl border-2 border-dashed border-slate-300 bg-white p-10 text-center cursor-pointer hover:border-slate-900 transition">
+ <p class="font-medium">Drag & drop an image here</p><p class="text-sm text-slate-500">or click to browse (PNG, JPG, WebP)</p>
+ <input id="file" type="file" accept="image/png,image/jpeg,image/webp" class="hidden"></div>
+<div id="work" class="grid lg:grid-cols-3 gap-6 mt-6 hidden">
+ <div class="card">
+  <label class="lbl !mt-0">Format</label><select id="fmt" class="inp"><option value="image/webp">WebP</option><option value="image/jpeg">JPEG</option><option value="image/png">PNG</option><option value="image/avif">AVIF (browser dependent)</option></select>
+  <label class="lbl">Quality: <span id="qv">80</span>%</label><input id="q" type="range" min="1" max="100" value="80" class="w-full">
+  <div class="grid grid-cols-2 gap-3"><div><label class="lbl">Width</label><input id="w" type="number" min="1" class="inp"></div><div><label class="lbl">Height</label><input id="h" type="number" min="1" class="inp"></div></div>
+  <label class="mt-3 flex items-center gap-2 text-sm"><input id="lock" type="checkbox" checked> Keep aspect ratio</label>
+  <p id="note" class="text-xs text-amber-600 mt-3"></p>
+  <button id="dl" class="btn mt-4 w-full">Download optimized</button></div>
+ <div class="card lg:col-span-2">
+  <div class="grid grid-cols-3 gap-3 text-center mb-4"><div class="rounded-xl bg-slate-50 p-3"><p class="text-xs text-slate-500">Original</p><p id="so" class="font-semibold">–</p></div><div class="rounded-xl bg-slate-50 p-3"><p class="text-xs text-slate-500">Optimized</p><p id="sn" class="font-semibold">–</p></div><div class="rounded-xl bg-emerald-50 p-3"><p class="text-xs text-emerald-700">Saved</p><p id="sp" class="font-semibold text-emerald-700">–</p></div></div>
+  <div class="grid sm:grid-cols-2 gap-3"><div><p class="text-xs text-slate-500 mb-1">Original</p><img id="po" class="rounded-xl border max-h-72 w-full object-contain bg-slate-50"></div><div><p class="text-xs text-slate-500 mb-1">Optimized</p><img id="pn" class="rounded-xl border max-h-72 w-full object-contain bg-slate-50"></div></div>
+ </div></div>
+<section class="mt-16"><h2 class="text-2xl font-bold mb-4">FAQ</h2><div class="space-y-3">
+<details class="card"><summary class="font-medium cursor-pointer">Are my images uploaded?</summary><p class="mt-2 text-sm text-slate-600">No. Images are decoded and re-encoded locally with the Canvas API.</p></details>
+<details class="card"><summary class="font-medium cursor-pointer">Which format should I choose?</summary><p class="mt-2 text-sm text-slate-600">WebP gives the best size/quality for the web. Use JPEG for photos needing wide support and PNG for lossless graphics.</p></details>
+<details class="card"><summary class="font-medium cursor-pointer">Why is AVIF unavailable?</summary><p class="mt-2 text-sm text-slate-600">AVIF encoding through canvas depends on your browser. If it is unsupported we fall back to WebP and tell you.</p></details>
+<details class="card"><summary class="font-medium cursor-pointer">Does the quality slider affect PNG?</summary><p class="mt-2 text-sm text-slate-600">No, PNG is lossless. Reduce its size by resizing the image instead.</p></details>
+<details class="card"><summary class="font-medium cursor-pointer">Is metadata like EXIF kept?</summary><p class="mt-2 text-sm text-slate-600">No. Re-encoding via canvas strips EXIF data, which is good for privacy.</p></details>
+</div></section>
+</main>
+<footer class="border-t bg-white mt-16"><div class="max-w-6xl mx-auto px-4 py-8 text-sm text-slate-500 space-y-2">
+<p>Built by ZenYukti Labs • Open Source MIT</p>
+<p class="flex flex-wrap gap-4"><a href="https://zenyukti.in" class="hover:text-slate-900">zenyukti.in</a><a href="https://github.com/zenyukti-labs/dev-tools" class="hover:text-slate-900">GitHub</a><a href="https://go.zenyukti.in/discord" class="hover:text-slate-900">go.zenyukti.in/discord</a><a href="https://twitter.com/zenyukti" class="hover:text-slate-900">@zenyukti</a></p>
+</div></footer>
+<script>
+const $=s=>document.querySelector(s);let img,file,blob,ratio=1,timer,ext='webp';
+const kb=n=>n>1048576?(n/1048576).toFixed(2)+' MB':(n/1024).toFixed(1)+' KB';
+const EXT={'image/webp':'webp','image/jpeg':'jpg','image/png':'png','image/avif':'avif'};
+$('#drop').onclick=()=>$('#file').click();
+$('#drop').ondragover=e=>{e.preventDefault();$('#drop').classList.add('border-slate-900')};
+$('#drop').ondragleave=()=>$('#drop').classList.remove('border-slate-900');
+$('#drop').ondrop=e=>{e.preventDefault();load(e.dataTransfer.files[0])};
+$('#file').onchange=e=>load(e.target.files[0]);
+function load(f){
+ if(!f||!/^image\/(png|jpeg|webp)$/.test(f.type))return alert('Please choose a PNG, JPG or WebP image.');
+ file=f;const url=URL.createObjectURL(f);img=new Image();
+ img.onload=()=>{ratio=img.naturalWidth/img.naturalHeight;$('#w').value=img.naturalWidth;$('#h').value=img.naturalHeight;$('#po').src=url;$('#so').textContent=kb(f.size);$('#work').classList.remove('hidden');run()};
+ img.src=url}
+function run(){clearTimeout(timer);timer=setTimeout(go,150)}
+function go(){
+ if(!img)return;const w=Math.max(1,+$('#w').value|0),h=Math.max(1,+$('#h').value|0);
+ const cv=document.createElement('canvas');cv.width=w;cv.height=h;const g=cv.getContext('2d');
+ let type=$('#fmt').value;if(type==='image/jpeg'){g.fillStyle='#fff';g.fillRect(0,0,w,h)}
+ g.imageSmoothingQuality='high';g.drawImage(img,0,0,w,h);
+ cv.toBlob(b=>{
+  $('#note').textContent='';
+  if(b&&b.type!==type){$('#note').textContent=`${type.split('/')[1].toUpperCase()} isn't supported by this browser; used ${b.type.split('/')[1].toUpperCase()} instead.`}
+  if(!b)return;blob=b;ext=EXT[b.type]||'png';
+  if($('#pn').src)URL.revokeObjectURL($('#pn').src);$('#pn').src=URL.createObjectURL(b);
+  $('#sn').textContent=kb(b.size);const p=(1-b.size/file.size)*100;$('#sp').textContent=(p>=0?'-':'+')+Math.abs(p).toFixed(1)+'%';
+ },type,+$('#q').value/100)}
+$('#q').oninput=()=>{$('#qv').textContent=$('#q').value;run()};
+$('#fmt').onchange=run;
+$('#w').oninput=()=>{if($('#lock').checked)$('#h').value=Math.round($('#w').value/ratio);run()};
+$('#h').oninput=()=>{if($('#lock').checked)$('#w').value=Math.round($('#h').value*ratio);run()};
+$('#dl').onclick=()=>{if(!blob)return;const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=file.name.replace(/\.[^.]+$/,'')+'-optimized.'+ext;a.click()};
+</script></body></html>
