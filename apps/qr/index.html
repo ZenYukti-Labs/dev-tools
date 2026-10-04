@@ -1,142 +1,663 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>QR Code Generator - Free UPI, WiFi & Barcode Generator | Offline & Open Source</title>
-<meta name="description" content="Free QR code generator. Create UPI, WiFi, text & barcode QR codes with logo. Download PNG or SVG. 100% offline, no upload, open source.">
-<link rel="canonical" href="https://qr-generator.zenyukti.in/">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="ZenYukti Labs">
-<meta property="og:title" content="QR Code Generator - Free UPI, WiFi & Barcode Generator | Offline & Open Source">
-<meta property="og:description" content="Free QR code generator. Create UPI, WiFi, text & barcode QR codes with logo. Download PNG or SVG. 100% offline, no upload, open source.">
-<meta property="og:url" content="https://qr-generator.zenyukti.in/">
-<meta name="twitter:card" content="summary_large_image">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "QR Code Generator", "url": "https://qr-generator.zenyukti.in", "description": "Free QR code generator. Create UPI, WiFi, text & barcode QR codes with logo. Download PNG or SVG. 100% offline, no upload, open source.", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "browserRequirements": "Requires a modern browser with JavaScript enabled.", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "author": {"@type": "Organization", "name": "ZenYukti Labs", "url": "https://zenyukti.in"}}</script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
-<style type="text/tailwindcss">
-body{font-family:Inter,system-ui,sans-serif;@apply bg-slate-50 text-slate-900}
-.inp{@apply w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-slate-900}
-.btn{@apply rounded-xl bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700}
-.btn2{@apply rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium hover:bg-slate-100}
-.card{@apply rounded-2xl border border-slate-200 bg-white p-5}
-.lbl{@apply mb-1 mt-3 block text-xs font-medium text-slate-500}
-.tab{@apply rounded-lg px-3 py-1.5 text-sm font-medium text-slate-500}
-.tab.on{@apply bg-slate-900 text-white}
-</style></head>
-<body>
-<header class="border-b bg-white"><div class="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
-<a href="https://zenyukti.in" class="font-semibold">ZenYukti Labs</a>
-<div class="flex items-center gap-3 text-sm"><span class="rounded-full bg-emerald-50 text-emerald-700 px-3 py-1 text-xs font-medium">100% Private</span><a class="text-slate-600 hover:text-slate-900" href="https://github.com/ZenYukti">GitHub</a></div></div></header>
-<main class="max-w-6xl mx-auto px-4 py-10">
-<h1 class="text-3xl md:text-4xl font-bold tracking-tight">QR Code Generator</h1>
-<p class="mt-2 text-slate-600 max-w-2xl">Make UPI payment QR codes, WiFi QR codes, branded standard QR codes and Code128 barcodes. Nothing leaves your device.</p>
-<div class="flex gap-1 mt-8 flex-wrap" id="tabs"><button class="tab on" data-t="std">Standard QR</button><button class="tab" data-t="upi">UPI QR</button><button class="tab" data-t="wifi">WiFi QR</button><button class="tab" data-t="bar">Barcode</button></div>
-<div class="grid lg:grid-cols-2 gap-6 mt-4">
-<div class="card">
- <div data-p="std"><label class="lbl !mt-0">URL, text or email</label><textarea id="s_text" rows="3" class="inp">https://qr-generator.zenyukti.in</textarea></div>
- <div data-p="upi" class="hidden"><label class="lbl !mt-0">UPI ID *</label><input id="u_pa" class="inp" placeholder="name@bank"><label class="lbl">Payee name *</label><input id="u_pn" class="inp" placeholder="Your Name">
-  <div class="grid grid-cols-2 gap-3"><div><label class="lbl">Amount (optional)</label><input id="u_am" type="number" min="0" step="0.01" class="inp"></div><div><label class="lbl">Note</label><input id="u_tn" class="inp"></div></div>
-  <p id="u_str" class="mt-3 break-all text-xs font-mono text-slate-500"></p></div>
- <div data-p="wifi" class="hidden"><label class="lbl !mt-0">Network name (SSID)</label><input id="w_s" class="inp"><label class="lbl">Password</label><input id="w_p" class="inp"><label class="lbl">Encryption</label><select id="w_e" class="inp"><option>WPA</option><option>WEP</option><option value="nopass">None</option></select></div>
- <div data-p="bar" class="hidden"><label class="lbl !mt-0">Code128 value</label><input id="b_text" class="inp" value="ZENYUKTI-001"></div>
- <div id="style">
-  <hr class="my-5">
-  <div class="grid grid-cols-2 gap-3"><div><label class="lbl !mt-0">Foreground</label><input id="fg" type="color" value="#0f172a" class="inp !p-1 h-10"></div><div><label class="lbl !mt-0">Background</label><input id="bg" type="color" value="#ffffff" class="inp !p-1 h-10"></div></div>
-  <label class="lbl">Size: <span id="szv">512</span>px</label><input id="sz" type="range" min="200" max="1024" step="8" value="512" class="w-full">
-  <label class="lbl">Dot style</label><select id="dot" class="inp"><option value="square">Square</option><option value="rounded">Rounded</option><option value="dots">Dots</option></select>
-  <label class="lbl">Center logo (optional)</label><input id="logo" type="file" accept="image/*" class="inp"></div>
-</div>
-<div class="card text-center">
- <p id="err" class="text-sm text-red-600 min-h-[1.25rem]"></p>
- <canvas id="cv" class="mx-auto max-w-full rounded-xl border" style="width:320px;height:320px"></canvas>
- <svg id="bar" class="mx-auto hidden max-w-full"></svg>
- <div class="flex gap-2 justify-center mt-5"><button id="png" class="btn">Download PNG</button><button id="svg" class="btn2">Download SVG</button></div>
-</div></div>
-<section class="mt-16"><h2 class="text-2xl font-bold mb-4">FAQ</h2><div class="space-y-3">
-<details class="card"><summary class="font-medium cursor-pointer">How does a UPI QR code work?</summary><p class="mt-2 text-sm text-slate-600">It encodes a upi://pay link with your UPI ID, name, optional amount and note. Any UPI app (GPay, PhonePe, Paytm, BHIM) can scan it.</p></details>
-<details class="card"><summary class="font-medium cursor-pointer">Is it safe to enter my UPI ID?</summary><p class="mt-2 text-sm text-slate-600">Yes. The QR is generated entirely in your browser and nothing is uploaded. A UPI ID is meant to be shared to receive money.</p></details>
-<details class="card"><summary class="font-medium cursor-pointer">Will the logo break scanning?</summary><p class="mt-2 text-sm text-slate-600">Keep the logo small; it covers a limited area and error correction recovers the rest. Always test-scan before printing.</p></details>
-<details class="card"><summary class="font-medium cursor-pointer">How does the WiFi QR work?</summary><p class="mt-2 text-sm text-slate-600">Phones read the WIFI: format and offer to join the network automatically.</p></details>
-<details class="card"><summary class="font-medium cursor-pointer">What barcode formats are supported?</summary><p class="mt-2 text-sm text-slate-600">Code128, which supports all ASCII characters. It needs internet once to load the barcode library.</p></details>
-</div></section>
-</main>
-<footer class="border-t bg-white mt-16"><div class="max-w-6xl mx-auto px-4 py-8 text-sm text-slate-500 space-y-2">
-<p>Built by ZenYukti Labs • Open Source MIT</p>
-<p class="flex flex-wrap gap-4"><a href="https://zenyukti.in" class="hover:text-slate-900">zenyukti.in</a><a href="https://github.com/zenyukti-labs/dev-tools" class="hover:text-slate-900">GitHub</a><a href="https://go.zenyukti.in/discord" class="hover:text-slate-900">go.zenyukti.in/discord</a><a href="https://twitter.com/zenyukti" class="hover:text-slate-900">@zenyukti</a></p>
-</div></footer>
-<script>
-function qrMatrix(text){
- const ECC=[0,10,16,26,18,24,16,18,22,22,26,30,22,22,24,24,28,28,26,26,26,26,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28];
- const BLK=[0,1,1,1,2,2,4,4,4,5,5,5,8,9,9,10,10,11,13,14,16,17,17,18,20,21,23,25,26,28,29,31,33,35,37,38,40,43,45,47,49];
- const raw=v=>{let r=(16*v+128)*v+64;if(v>=2){const a=(v/7|0)+2;r-=(25*a-10)*a-55;if(v>=7)r-=36}return r};
- const data=[...new TextEncoder().encode(text)];
- let v=1;for(;v<=40;v++){const cap=(raw(v)>>3)-ECC[v]*BLK[v];if(4+(v<10?8:16)+8*data.length<=cap*8)break}
- if(v>40)throw new Error('Too long');
- const bits=[],put=(x,n)=>{for(let i=n-1;i>=0;i--)bits.push((x>>>i)&1)};
- put(4,4);put(data.length,v<10?8:16);data.forEach(b=>put(b,8));
- const cap=((raw(v)>>3)-ECC[v]*BLK[v])*8;
- put(0,Math.min(4,cap-bits.length));while(bits.length%8)bits.push(0);
- for(let p=0xEC;bits.length<cap;p^=0xEC^0x11)put(p,8);
- const cw=[];for(let i=0;i<bits.length;i+=8)cw.push(parseInt(bits.slice(i,i+8).join(''),2));
- const mul=(x,y)=>{let z=0;for(let i=7;i>=0;i--){z=(z<<1)^((z>>>7)*0x11D);z^=((y>>>i)&1)*x}return z};
- const d=ECC[v],div=new Array(d).fill(0);div[d-1]=1;let root=1;
- for(let i=0;i<d;i++){for(let j=0;j<d;j++){div[j]=mul(div[j],root);if(j+1<d)div[j]^=div[j+1]}root=mul(root,2)}
- const nb=BLK[v],rc=raw(v)>>3,ns=nb-rc%nb,sl=rc/nb|0,blocks=[];
- for(let i=0,k=0;i<nb;i++){const dat=cw.slice(k,k+sl-d+(i<ns?0:1));k+=dat.length;
-  const r=new Array(d).fill(0);for(const b of dat){const f=b^r.shift();r.push(0);div.forEach((c,j)=>r[j]^=mul(c,f))}
-  if(i<ns)dat.push(0);blocks.push(dat.concat(r))}
- const fin=[];for(let i=0;i<blocks[0].length;i++)blocks.forEach((b,j)=>{if(i!=sl-d||j>=ns)fin.push(b[i])});
- const n=v*4+17,m=Array.from({length:n},()=>new Array(n).fill(false)),fn=Array.from({length:n},()=>new Array(n).fill(false));
- const set=(x,y,c)=>{m[y][x]=c;fn[y][x]=true};
- for(let i=0;i<n;i++){set(6,i,i%2==0);set(i,6,i%2==0)}
- for(const[x,y]of[[3,3],[n-4,3],[3,n-4]])for(let dy=-4;dy<=4;dy++)for(let dx=-4;dx<=4;dx++){const q=Math.max(Math.abs(dx),Math.abs(dy)),xx=x+dx,yy=y+dy;if(xx>=0&&xx<n&&yy>=0&&yy<n)set(xx,yy,q!=2&&q!=4)}
- const na=v==1?0:(v/7|0)+2,step=v==32?26:Math.ceil((v*4+4)/(na*2-2))*2,ap=na?[6]:[];
- for(let p=n-7;ap.length<na;p-=step)ap.splice(1,0,p);
- for(let i=0;i<na;i++)for(let j=0;j<na;j++){if((i==0&&j==0)||(i==0&&j==na-1)||(i==na-1&&j==0))continue;for(let dy=-2;dy<=2;dy++)for(let dx=-2;dx<=2;dx++)set(ap[i]+dx,ap[j]+dy,Math.max(Math.abs(dx),Math.abs(dy))!=1)}
- const fmt=mk=>{let r=mk;for(let i=0;i<10;i++)r=(r<<1)^((r>>>9)*0x537);const b=((mk<<10)|r)^0x5412,g=i=>((b>>>i)&1)!=0;
-  for(let i=0;i<=5;i++)set(8,i,g(i));set(8,7,g(6));set(8,8,g(7));set(7,8,g(8));for(let i=9;i<15;i++)set(14-i,8,g(i));
-  for(let i=0;i<8;i++)set(n-1-i,8,g(i));for(let i=8;i<15;i++)set(8,n-15+i,g(i));set(8,n-8,true)};
- fmt(0);
- if(v>=7){let r=v;for(let i=0;i<12;i++)r=(r<<1)^((r>>>11)*0x1F25);const b=(v<<12)|r;for(let i=0;i<18;i++){const c=((b>>>i)&1)!=0,a=n-11+i%3,e=i/3|0;set(a,e,c);set(e,a,c)}}
- let i=0;for(let right=n-1;right>=1;right-=2){if(right==6)right=5;for(let vert=0;vert<n;vert++)for(let j=0;j<2;j++){const x=right-j,up=((right+1)&2)==0,y=up?n-1-vert:vert;if(!fn[y][x]&&i<fin.length*8){m[y][x]=((fin[i>>>3]>>>(7-(i&7)))&1)!=0;i++}}}
- const mask=(mk)=>{for(let y=0;y<n;y++)for(let x=0;x<n;x++){let inv;switch(mk){case 0:inv=(x+y)%2==0;break;case 1:inv=y%2==0;break;case 2:inv=x%3==0;break;case 3:inv=(x+y)%3==0;break;case 4:inv=((x/3|0)+(y/2|0))%2==0;break;case 5:inv=x*y%2+x*y%3==0;break;case 6:inv=(x*y%2+x*y%3)%2==0;break;default:inv=((x+y)%2+x*y%3)%2==0}if(!fn[y][x]&&inv)m[y][x]=!m[y][x]}};
- const pen=()=>{let s=0;for(let a=0;a<n;a++){let rr=1,rc2=1;for(let b=1;b<n;b++){rr=m[a][b]==m[a][b-1]?rr+1:1;rc2=m[b][a]==m[b-1][a]?rc2+1:1;if(rr==5)s+=3;else if(rr>5)s++;if(rc2==5)s+=3;else if(rc2>5)s++}}
-  for(let y=0;y<n-1;y++)for(let x=0;x<n-1;x++)if(m[y][x]==m[y][x+1]&&m[y][x]==m[y+1][x]&&m[y][x]==m[y+1][x+1])s+=3;return s};
- let best=0,bp=1e9;for(let k=0;k<8;k++){mask(k);fmt(k);const p=pen();if(p<bp){bp=p;best=k}mask(k)}
- mask(best);fmt(best);return m;
-}
-const $=s=>document.querySelector(s);let tab='std',logo=null,matrix=null;
-function payload(){
- if(tab==='std')return $('#s_text').value;
- if(tab==='upi'){const pa=$('#u_pa').value.trim(),pn=$('#u_pn').value.trim();if(!pa||!pn)return '';
-  let s='upi://pay?pa='+encodeURIComponent(pa)+'&pn='+encodeURIComponent(pn);const am=$('#u_am').value,tn=$('#u_tn').value.trim();
-  if(am&&+am>0)s+='&am='+(+am).toFixed(2);if(tn)s+='&tn='+encodeURIComponent(tn);s+='&cu=INR';$('#u_str').textContent=s;return s}
- if(tab==='wifi'){const e=t=>t.replace(/([\\;,:"])/g,'\\$1'),s=$('#w_s').value;if(!s)return '';const enc=$('#w_e').value;return `WIFI:T:${enc};S:${e(s)};${enc==='nopass'?'':'P:'+e($('#w_p').value)+';'};`}
- return $('#b_text').value}
-function o(){return{fg:$('#fg').value,bg:$('#bg').value,size:+$('#sz').value,style:$('#dot').value}}
-function drawQR(cv,m,op){
- const n=m.length,q=4,c=op.size/(n+q*2);cv.width=cv.height=op.size;const g=cv.getContext('2d');g.fillStyle=op.bg;g.fillRect(0,0,op.size,op.size);g.fillStyle=op.fg;
- m.forEach((r,y)=>r.forEach((v,x)=>{if(!v)return;const px=(x+q)*c,py=(y+q)*c;g.beginPath();
-  if(op.style==='dots')g.arc(px+c/2,py+c/2,c*.46,0,7);else if(op.style==='rounded')g.roundRect(px,py,c,c,c*.35);else g.rect(px,py,c+.5,c+.5);g.fill()}));
- if(logo){const l=op.size*.2,x=(op.size-l)/2;g.fillStyle=op.bg;g.fillRect(x-6,x-6,l+12,l+12);g.drawImage(logo,x,x,l,l)}}
-function svgQR(m,op){
- const n=m.length,q=4,t=n+q*2;let d=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${t} ${t}" width="${op.size}" height="${op.size}"><rect width="${t}" height="${t}" fill="${op.bg}"/><g fill="${op.fg}">`;
- m.forEach((r,y)=>r.forEach((v,x)=>{if(!v)return;const X=x+q,Y=y+q;d+=op.style==='dots'?`<circle cx="${X+.5}" cy="${Y+.5}" r=".46"/>`:`<rect x="${X}" y="${Y}" width="1.02" height="1.02"${op.style==='rounded'?' rx=".35"':''}/>`}));
- d+='</g>';if(logo){const c=document.createElement('canvas');c.width=c.height=256;c.getContext('2d').drawImage(logo,0,0,256,256);const l=t*.2,x=(t-l)/2;d+=`<rect x="${x-.4}" y="${x-.4}" width="${l+.8}" height="${l+.8}" fill="${op.bg}"/><image x="${x}" y="${x}" width="${l}" height="${l}" href="${c.toDataURL()}"/>`}
- return d+'</svg>'}
-function render(){
- const isBar=tab==='bar';$('#cv').classList.toggle('hidden',isBar);$('#bar').classList.toggle('hidden',!isBar);$('#style').classList.toggle('hidden',isBar);$('#err').textContent='';
- document.querySelectorAll('[data-p]').forEach(e=>e.classList.toggle('hidden',e.dataset.p!==tab));$('#szv').textContent=$('#sz').value;
- const text=payload();matrix=null;
- if(isBar){if(!window.JsBarcode){$('#err').textContent='Barcode library not loaded (needs internet once).';return}
-  try{JsBarcode('#bar',text||' ',{format:'CODE128',lineColor:'#0f172a',width:2,height:90,displayValue:true})}catch(e){$('#err').textContent='Invalid barcode value'}return}
- if(!text){$('#err').textContent=tab==='upi'?'Enter UPI ID and payee name':tab==='wifi'?'Enter the network name':'Enter some text';const c=$('#cv');c.getContext('2d').clearRect(0,0,c.width,c.height);return}
- try{matrix=qrMatrix(text);drawQR($('#cv'),matrix,o())}catch(e){$('#err').textContent='Content is too long for a QR code'}}
-function save(href,name){const a=document.createElement('a');a.href=href;a.download=name;a.click()}
-$('#png').onclick=()=>{if(tab==='bar'){const s=new XMLSerializer().serializeToString($('#bar')),i=new Image();i.onload=()=>{const c=document.createElement('canvas');c.width=i.width||300;c.height=i.height||150;const g=c.getContext('2d');g.fillStyle='#fff';g.fillRect(0,0,c.width,c.height);g.drawImage(i,0,0);save(c.toDataURL(),'barcode.png')};i.src='data:image/svg+xml;base64,'+btoa(unescape(encodeURIComponent(s)))}else if(matrix)save($('#cv').toDataURL(),tab+'-qr.png')};
-$('#svg').onclick=()=>{const s=tab==='bar'?new XMLSerializer().serializeToString($('#bar')):matrix&&svgQR(matrix,o());if(s)save(URL.createObjectURL(new Blob([s],{type:'image/svg+xml'})),(tab==='bar'?'barcode':tab+'-qr')+'.svg')};
-document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));b.classList.add('on');tab=b.dataset.t;render()});
-document.querySelectorAll('input,textarea,select').forEach(e=>e.addEventListener('input',render));
-$('#logo').onchange=e=>{const f=e.target.files[0];if(!f){logo=null;return render()}const i=new Image();i.onload=()=>{logo=i;render()};i.src=URL.createObjectURL(f)};
-render();
-</script></body></html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>QR Code Generator - Free UPI, WiFi & Barcode Generator | Offline & Open Source</title>
+    <meta
+      name="description"
+      content="Free QR code generator. Create UPI, WiFi, text & barcode QR codes with logo. Download PNG or SVG. 100% offline, no upload, open source."
+    />
+    <link rel="canonical" href="https://qr-generator.zenyukti.in/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="ZenYukti Labs" />
+    <meta
+      property="og:title"
+      content="QR Code Generator - Free UPI, WiFi & Barcode Generator | Offline & Open Source"
+    />
+    <meta
+      property="og:description"
+      content="Free QR code generator. Create UPI, WiFi, text & barcode QR codes with logo. Download PNG or SVG. 100% offline, no upload, open source."
+    />
+    <meta property="og:url" content="https://qr-generator.zenyukti.in/" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "QR Code Generator",
+        "url": "https://qr-generator.zenyukti.in",
+        "description": "Free QR code generator. Create UPI, WiFi, text & barcode QR codes with logo. Download PNG or SVG. 100% offline, no upload, open source.",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Any",
+        "browserRequirements": "Requires a modern browser with JavaScript enabled.",
+        "isAccessibleForFree": true,
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "author": { "@type": "Organization", "name": "ZenYukti Labs", "url": "https://zenyukti.in" }
+      }
+    </script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+    <style type="text/tailwindcss">
+      body {
+        font-family: Inter, system-ui, sans-serif;
+        @apply bg-slate-50 text-slate-900;
+      }
+      .inp {
+        @apply w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-slate-900;
+      }
+      .btn {
+        @apply rounded-xl bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700;
+      }
+      .btn2 {
+        @apply rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium hover:bg-slate-100;
+      }
+      .card {
+        @apply rounded-2xl border border-slate-200 bg-white p-5;
+      }
+      .lbl {
+        @apply mb-1 mt-3 block text-xs font-medium text-slate-500;
+      }
+      .tab {
+        @apply rounded-lg px-3 py-1.5 text-sm font-medium text-slate-500;
+      }
+      .tab.on {
+        @apply bg-slate-900 text-white;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="border-b bg-white">
+      <div class="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
+        <a href="https://zenyukti.in" class="font-semibold">ZenYukti Labs</a>
+        <div class="flex items-center gap-3 text-sm">
+          <span class="rounded-full bg-emerald-50 text-emerald-700 px-3 py-1 text-xs font-medium">
+            100% Private
+          </span>
+          <a class="text-slate-600 hover:text-slate-900" href="https://github.com/ZenYukti">
+            GitHub
+          </a>
+        </div>
+      </div>
+    </header>
+    <main class="max-w-6xl mx-auto px-4 py-10">
+      <h1 class="text-3xl md:text-4xl font-bold tracking-tight">QR Code Generator</h1>
+      <p class="mt-2 text-slate-600 max-w-2xl">
+        Make UPI payment QR codes, WiFi QR codes, branded standard QR codes and Code128 barcodes.
+        Nothing leaves your device.
+      </p>
+      <div class="flex gap-1 mt-8 flex-wrap" id="tabs">
+        <button class="tab on" data-t="std">Standard QR</button>
+        <button class="tab" data-t="upi">UPI QR</button>
+        <button class="tab" data-t="wifi">WiFi QR</button>
+        <button class="tab" data-t="bar">Barcode</button>
+      </div>
+      <div class="grid lg:grid-cols-2 gap-6 mt-4">
+        <div class="card">
+          <div data-p="std">
+            <label class="lbl !mt-0">URL, text or email</label>
+            <textarea id="s_text" rows="3" class="inp">https://qr-generator.zenyukti.in</textarea>
+          </div>
+          <div data-p="upi" class="hidden">
+            <label class="lbl !mt-0">UPI ID *</label>
+            <input id="u_pa" class="inp" placeholder="name@bank" />
+            <label class="lbl">Payee name *</label>
+            <input id="u_pn" class="inp" placeholder="Your Name" />
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="lbl">Amount (optional)</label>
+                <input id="u_am" type="number" min="0" step="0.01" class="inp" />
+              </div>
+              <div>
+                <label class="lbl">Note</label>
+                <input id="u_tn" class="inp" />
+              </div>
+            </div>
+            <p id="u_str" class="mt-3 break-all text-xs font-mono text-slate-500"></p>
+          </div>
+          <div data-p="wifi" class="hidden">
+            <label class="lbl !mt-0">Network name (SSID)</label>
+            <input id="w_s" class="inp" />
+            <label class="lbl">Password</label>
+            <input id="w_p" class="inp" />
+            <label class="lbl">Encryption</label>
+            <select id="w_e" class="inp">
+              <option>WPA</option>
+              <option>WEP</option>
+              <option value="nopass">None</option>
+            </select>
+          </div>
+          <div data-p="bar" class="hidden">
+            <label class="lbl !mt-0">Code128 value</label>
+            <input id="b_text" class="inp" value="ZENYUKTI-001" />
+          </div>
+          <div id="style">
+            <hr class="my-5" />
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="lbl !mt-0">Foreground</label>
+                <input id="fg" type="color" value="#0f172a" class="inp !p-1 h-10" />
+              </div>
+              <div>
+                <label class="lbl !mt-0">Background</label>
+                <input id="bg" type="color" value="#ffffff" class="inp !p-1 h-10" />
+              </div>
+            </div>
+            <label class="lbl">
+              Size:
+              <span id="szv">512</span>
+              px
+            </label>
+            <input id="sz" type="range" min="200" max="1024" step="8" value="512" class="w-full" />
+            <label class="lbl">Dot style</label>
+            <select id="dot" class="inp">
+              <option value="square">Square</option>
+              <option value="rounded">Rounded</option>
+              <option value="dots">Dots</option>
+            </select>
+            <label class="lbl">Center logo (optional)</label>
+            <input id="logo" type="file" accept="image/*" class="inp" />
+          </div>
+        </div>
+        <div class="card text-center">
+          <p id="err" class="text-sm text-red-600 min-h-[1.25rem]"></p>
+          <canvas
+            id="cv"
+            class="mx-auto max-w-full rounded-xl border"
+            style="width: 320px; height: 320px"
+          ></canvas>
+          <svg id="bar" class="mx-auto hidden max-w-full"></svg>
+          <div class="flex gap-2 justify-center mt-5">
+            <button id="png" class="btn">Download PNG</button>
+            <button id="svg" class="btn2">Download SVG</button>
+          </div>
+        </div>
+      </div>
+      <section class="mt-16">
+        <h2 class="text-2xl font-bold mb-4">FAQ</h2>
+        <div class="space-y-3">
+          <details class="card">
+            <summary class="font-medium cursor-pointer">How does a UPI QR code work?</summary>
+            <p class="mt-2 text-sm text-slate-600">
+              It encodes a upi://pay link with your UPI ID, name, optional amount and note. Any UPI
+              app (GPay, PhonePe, Paytm, BHIM) can scan it.
+            </p>
+          </details>
+          <details class="card">
+            <summary class="font-medium cursor-pointer">Is it safe to enter my UPI ID?</summary>
+            <p class="mt-2 text-sm text-slate-600">
+              Yes. The QR is generated entirely in your browser and nothing is uploaded. A UPI ID is
+              meant to be shared to receive money.
+            </p>
+          </details>
+          <details class="card">
+            <summary class="font-medium cursor-pointer">Will the logo break scanning?</summary>
+            <p class="mt-2 text-sm text-slate-600">
+              Keep the logo small; it covers a limited area and error correction recovers the rest.
+              Always test-scan before printing.
+            </p>
+          </details>
+          <details class="card">
+            <summary class="font-medium cursor-pointer">How does the WiFi QR work?</summary>
+            <p class="mt-2 text-sm text-slate-600">
+              Phones read the WIFI: format and offer to join the network automatically.
+            </p>
+          </details>
+          <details class="card">
+            <summary class="font-medium cursor-pointer">
+              What barcode formats are supported?
+            </summary>
+            <p class="mt-2 text-sm text-slate-600">
+              Code128, which supports all ASCII characters. It needs internet once to load the
+              barcode library.
+            </p>
+          </details>
+        </div>
+      </section>
+    </main>
+    <footer class="border-t bg-white mt-16">
+      <div class="max-w-6xl mx-auto px-4 py-8 text-sm text-slate-500 space-y-2">
+        <p>Built by ZenYukti Labs • Open Source MIT</p>
+        <p class="flex flex-wrap gap-4">
+          <a href="https://zenyukti.in" class="hover:text-slate-900">zenyukti.in</a>
+          <a href="https://github.com/zenyukti-labs/dev-tools" class="hover:text-slate-900">
+            GitHub
+          </a>
+          <a href="https://go.zenyukti.in/discord" class="hover:text-slate-900">
+            go.zenyukti.in/discord
+          </a>
+          <a href="https://twitter.com/zenyukti" class="hover:text-slate-900">@zenyukti</a>
+        </p>
+      </div>
+    </footer>
+    <script>
+      function qrMatrix(text) {
+        const ECC = [
+          0, 10, 16, 26, 18, 24, 16, 18, 22, 22, 26, 30, 22, 22, 24, 24, 28, 28, 26, 26, 26, 26, 28,
+          28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28,
+        ];
+        const BLK = [
+          0, 1, 1, 1, 2, 2, 4, 4, 4, 5, 5, 5, 8, 9, 9, 10, 10, 11, 13, 14, 16, 17, 17, 18, 20, 21,
+          23, 25, 26, 28, 29, 31, 33, 35, 37, 38, 40, 43, 45, 47, 49,
+        ];
+        const raw = (v) => {
+          let r = (16 * v + 128) * v + 64;
+          if (v >= 2) {
+            const a = ((v / 7) | 0) + 2;
+            r -= (25 * a - 10) * a - 55;
+            if (v >= 7) r -= 36;
+          }
+          return r;
+        };
+        const data = [...new TextEncoder().encode(text)];
+        let v = 1;
+        for (; v <= 40; v++) {
+          const cap = (raw(v) >> 3) - ECC[v] * BLK[v];
+          if (4 + (v < 10 ? 8 : 16) + 8 * data.length <= cap * 8) break;
+        }
+        if (v > 40) throw new Error('Too long');
+        const bits = [],
+          put = (x, n) => {
+            for (let i = n - 1; i >= 0; i--) bits.push((x >>> i) & 1);
+          };
+        put(4, 4);
+        put(data.length, v < 10 ? 8 : 16);
+        data.forEach((b) => put(b, 8));
+        const cap = ((raw(v) >> 3) - ECC[v] * BLK[v]) * 8;
+        put(0, Math.min(4, cap - bits.length));
+        while (bits.length % 8) bits.push(0);
+        for (let p = 0xec; bits.length < cap; p ^= 0xec ^ 0x11) put(p, 8);
+        const cw = [];
+        for (let i = 0; i < bits.length; i += 8)
+          cw.push(parseInt(bits.slice(i, i + 8).join(''), 2));
+        const mul = (x, y) => {
+          let z = 0;
+          for (let i = 7; i >= 0; i--) {
+            z = (z << 1) ^ ((z >>> 7) * 0x11d);
+            z ^= ((y >>> i) & 1) * x;
+          }
+          return z;
+        };
+        const d = ECC[v],
+          div = new Array(d).fill(0);
+        div[d - 1] = 1;
+        let root = 1;
+        for (let i = 0; i < d; i++) {
+          for (let j = 0; j < d; j++) {
+            div[j] = mul(div[j], root);
+            if (j + 1 < d) div[j] ^= div[j + 1];
+          }
+          root = mul(root, 2);
+        }
+        const nb = BLK[v],
+          rc = raw(v) >> 3,
+          ns = nb - (rc % nb),
+          sl = (rc / nb) | 0,
+          blocks = [];
+        for (let i = 0, k = 0; i < nb; i++) {
+          const dat = cw.slice(k, k + sl - d + (i < ns ? 0 : 1));
+          k += dat.length;
+          const r = new Array(d).fill(0);
+          for (const b of dat) {
+            const f = b ^ r.shift();
+            r.push(0);
+            div.forEach((c, j) => (r[j] ^= mul(c, f)));
+          }
+          if (i < ns) dat.push(0);
+          blocks.push(dat.concat(r));
+        }
+        const fin = [];
+        for (let i = 0; i < blocks[0].length; i++)
+          blocks.forEach((b, j) => {
+            if (i != sl - d || j >= ns) fin.push(b[i]);
+          });
+        const n = v * 4 + 17,
+          m = Array.from({ length: n }, () => new Array(n).fill(false)),
+          fn = Array.from({ length: n }, () => new Array(n).fill(false));
+        const set = (x, y, c) => {
+          m[y][x] = c;
+          fn[y][x] = true;
+        };
+        for (let i = 0; i < n; i++) {
+          set(6, i, i % 2 == 0);
+          set(i, 6, i % 2 == 0);
+        }
+        for (const [x, y] of [
+          [3, 3],
+          [n - 4, 3],
+          [3, n - 4],
+        ])
+          for (let dy = -4; dy <= 4; dy++)
+            for (let dx = -4; dx <= 4; dx++) {
+              const q = Math.max(Math.abs(dx), Math.abs(dy)),
+                xx = x + dx,
+                yy = y + dy;
+              if (xx >= 0 && xx < n && yy >= 0 && yy < n) set(xx, yy, q != 2 && q != 4);
+            }
+        const na = v == 1 ? 0 : ((v / 7) | 0) + 2,
+          step = v == 32 ? 26 : Math.ceil((v * 4 + 4) / (na * 2 - 2)) * 2,
+          ap = na ? [6] : [];
+        for (let p = n - 7; ap.length < na; p -= step) ap.splice(1, 0, p);
+        for (let i = 0; i < na; i++)
+          for (let j = 0; j < na; j++) {
+            if ((i == 0 && j == 0) || (i == 0 && j == na - 1) || (i == na - 1 && j == 0)) continue;
+            for (let dy = -2; dy <= 2; dy++)
+              for (let dx = -2; dx <= 2; dx++)
+                set(ap[i] + dx, ap[j] + dy, Math.max(Math.abs(dx), Math.abs(dy)) != 1);
+          }
+        const fmt = (mk) => {
+          let r = mk;
+          for (let i = 0; i < 10; i++) r = (r << 1) ^ ((r >>> 9) * 0x537);
+          const b = ((mk << 10) | r) ^ 0x5412,
+            g = (i) => ((b >>> i) & 1) != 0;
+          for (let i = 0; i <= 5; i++) set(8, i, g(i));
+          set(8, 7, g(6));
+          set(8, 8, g(7));
+          set(7, 8, g(8));
+          for (let i = 9; i < 15; i++) set(14 - i, 8, g(i));
+          for (let i = 0; i < 8; i++) set(n - 1 - i, 8, g(i));
+          for (let i = 8; i < 15; i++) set(8, n - 15 + i, g(i));
+          set(8, n - 8, true);
+        };
+        fmt(0);
+        if (v >= 7) {
+          let r = v;
+          for (let i = 0; i < 12; i++) r = (r << 1) ^ ((r >>> 11) * 0x1f25);
+          const b = (v << 12) | r;
+          for (let i = 0; i < 18; i++) {
+            const c = ((b >>> i) & 1) != 0,
+              a = n - 11 + (i % 3),
+              e = (i / 3) | 0;
+            set(a, e, c);
+            set(e, a, c);
+          }
+        }
+        let i = 0;
+        for (let right = n - 1; right >= 1; right -= 2) {
+          if (right == 6) right = 5;
+          for (let vert = 0; vert < n; vert++)
+            for (let j = 0; j < 2; j++) {
+              const x = right - j,
+                up = ((right + 1) & 2) == 0,
+                y = up ? n - 1 - vert : vert;
+              if (!fn[y][x] && i < fin.length * 8) {
+                m[y][x] = ((fin[i >>> 3] >>> (7 - (i & 7))) & 1) != 0;
+                i++;
+              }
+            }
+        }
+        const mask = (mk) => {
+          for (let y = 0; y < n; y++)
+            for (let x = 0; x < n; x++) {
+              let inv;
+              switch (mk) {
+                case 0:
+                  inv = (x + y) % 2 == 0;
+                  break;
+                case 1:
+                  inv = y % 2 == 0;
+                  break;
+                case 2:
+                  inv = x % 3 == 0;
+                  break;
+                case 3:
+                  inv = (x + y) % 3 == 0;
+                  break;
+                case 4:
+                  inv = (((x / 3) | 0) + ((y / 2) | 0)) % 2 == 0;
+                  break;
+                case 5:
+                  inv = ((x * y) % 2) + ((x * y) % 3) == 0;
+                  break;
+                case 6:
+                  inv = (((x * y) % 2) + ((x * y) % 3)) % 2 == 0;
+                  break;
+                default:
+                  inv = (((x + y) % 2) + ((x * y) % 3)) % 2 == 0;
+              }
+              if (!fn[y][x] && inv) m[y][x] = !m[y][x];
+            }
+        };
+        const pen = () => {
+          let s = 0;
+          for (let a = 0; a < n; a++) {
+            let rr = 1,
+              rc2 = 1;
+            for (let b = 1; b < n; b++) {
+              rr = m[a][b] == m[a][b - 1] ? rr + 1 : 1;
+              rc2 = m[b][a] == m[b - 1][a] ? rc2 + 1 : 1;
+              if (rr == 5) s += 3;
+              else if (rr > 5) s++;
+              if (rc2 == 5) s += 3;
+              else if (rc2 > 5) s++;
+            }
+          }
+          for (let y = 0; y < n - 1; y++)
+            for (let x = 0; x < n - 1; x++)
+              if (m[y][x] == m[y][x + 1] && m[y][x] == m[y + 1][x] && m[y][x] == m[y + 1][x + 1])
+                s += 3;
+          return s;
+        };
+        let best = 0,
+          bp = 1e9;
+        for (let k = 0; k < 8; k++) {
+          mask(k);
+          fmt(k);
+          const p = pen();
+          if (p < bp) {
+            bp = p;
+            best = k;
+          }
+          mask(k);
+        }
+        mask(best);
+        fmt(best);
+        return m;
+      }
+      const $ = (s) => document.querySelector(s);
+      let tab = 'std',
+        logo = null,
+        matrix = null;
+      function payload() {
+        if (tab === 'std') return $('#s_text').value;
+        if (tab === 'upi') {
+          const pa = $('#u_pa').value.trim(),
+            pn = $('#u_pn').value.trim();
+          if (!pa || !pn) return '';
+          let s = 'upi://pay?pa=' + encodeURIComponent(pa) + '&pn=' + encodeURIComponent(pn);
+          const am = $('#u_am').value,
+            tn = $('#u_tn').value.trim();
+          if (am && +am > 0) s += '&am=' + (+am).toFixed(2);
+          if (tn) s += '&tn=' + encodeURIComponent(tn);
+          s += '&cu=INR';
+          $('#u_str').textContent = s;
+          return s;
+        }
+        if (tab === 'wifi') {
+          const e = (t) => t.replace(/([\\;,:"])/g, '\\$1'),
+            s = $('#w_s').value;
+          if (!s) return '';
+          const enc = $('#w_e').value;
+          return `WIFI:T:${enc};S:${e(s)};${enc === 'nopass' ? '' : 'P:' + e($('#w_p').value) + ';'};`;
+        }
+        return $('#b_text').value;
+      }
+      function o() {
+        return {
+          fg: $('#fg').value,
+          bg: $('#bg').value,
+          size: +$('#sz').value,
+          style: $('#dot').value,
+        };
+      }
+      function drawQR(cv, m, op) {
+        const n = m.length,
+          q = 4,
+          c = op.size / (n + q * 2);
+        cv.width = cv.height = op.size;
+        const g = cv.getContext('2d');
+        g.fillStyle = op.bg;
+        g.fillRect(0, 0, op.size, op.size);
+        g.fillStyle = op.fg;
+        m.forEach((r, y) =>
+          r.forEach((v, x) => {
+            if (!v) return;
+            const px = (x + q) * c,
+              py = (y + q) * c;
+            g.beginPath();
+            if (op.style === 'dots') g.arc(px + c / 2, py + c / 2, c * 0.46, 0, 7);
+            else if (op.style === 'rounded') g.roundRect(px, py, c, c, c * 0.35);
+            else g.rect(px, py, c + 0.5, c + 0.5);
+            g.fill();
+          }),
+        );
+        if (logo) {
+          const l = op.size * 0.2,
+            x = (op.size - l) / 2;
+          g.fillStyle = op.bg;
+          g.fillRect(x - 6, x - 6, l + 12, l + 12);
+          g.drawImage(logo, x, x, l, l);
+        }
+      }
+      function svgQR(m, op) {
+        const n = m.length,
+          q = 4,
+          t = n + q * 2;
+        let d = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${t} ${t}" width="${op.size}" height="${op.size}"><rect width="${t}" height="${t}" fill="${op.bg}"/><g fill="${op.fg}">`;
+        m.forEach((r, y) =>
+          r.forEach((v, x) => {
+            if (!v) return;
+            const X = x + q,
+              Y = y + q;
+            d +=
+              op.style === 'dots'
+                ? `<circle cx="${X + 0.5}" cy="${Y + 0.5}" r=".46"/>`
+                : `<rect x="${X}" y="${Y}" width="1.02" height="1.02"${op.style === 'rounded' ? ' rx=".35"' : ''}/>`;
+          }),
+        );
+        d += '</g>';
+        if (logo) {
+          const c = document.createElement('canvas');
+          c.width = c.height = 256;
+          c.getContext('2d').drawImage(logo, 0, 0, 256, 256);
+          const l = t * 0.2,
+            x = (t - l) / 2;
+          d += `<rect x="${x - 0.4}" y="${x - 0.4}" width="${l + 0.8}" height="${l + 0.8}" fill="${op.bg}"/><image x="${x}" y="${x}" width="${l}" height="${l}" href="${c.toDataURL()}"/>`;
+        }
+        return d + '</svg>';
+      }
+      function render() {
+        const isBar = tab === 'bar';
+        $('#cv').classList.toggle('hidden', isBar);
+        $('#bar').classList.toggle('hidden', !isBar);
+        $('#style').classList.toggle('hidden', isBar);
+        $('#err').textContent = '';
+        document
+          .querySelectorAll('[data-p]')
+          .forEach((e) => e.classList.toggle('hidden', e.dataset.p !== tab));
+        $('#szv').textContent = $('#sz').value;
+        const text = payload();
+        matrix = null;
+        if (isBar) {
+          if (!window.JsBarcode) {
+            $('#err').textContent = 'Barcode library not loaded (needs internet once).';
+            return;
+          }
+          try {
+            JsBarcode('#bar', text || ' ', {
+              format: 'CODE128',
+              lineColor: '#0f172a',
+              width: 2,
+              height: 90,
+              displayValue: true,
+            });
+          } catch (e) {
+            $('#err').textContent = 'Invalid barcode value';
+          }
+          return;
+        }
+        if (!text) {
+          $('#err').textContent =
+            tab === 'upi'
+              ? 'Enter UPI ID and payee name'
+              : tab === 'wifi'
+                ? 'Enter the network name'
+                : 'Enter some text';
+          const c = $('#cv');
+          c.getContext('2d').clearRect(0, 0, c.width, c.height);
+          return;
+        }
+        try {
+          matrix = qrMatrix(text);
+          drawQR($('#cv'), matrix, o());
+        } catch (e) {
+          $('#err').textContent = 'Content is too long for a QR code';
+        }
+      }
+      function save(href, name) {
+        const a = document.createElement('a');
+        a.href = href;
+        a.download = name;
+        a.click();
+      }
+      $('#png').onclick = () => {
+        if (tab === 'bar') {
+          const s = new XMLSerializer().serializeToString($('#bar')),
+            i = new Image();
+          i.onload = () => {
+            const c = document.createElement('canvas');
+            c.width = i.width || 300;
+            c.height = i.height || 150;
+            const g = c.getContext('2d');
+            g.fillStyle = '#fff';
+            g.fillRect(0, 0, c.width, c.height);
+            g.drawImage(i, 0, 0);
+            save(c.toDataURL(), 'barcode.png');
+          };
+          i.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(s)));
+        } else if (matrix) save($('#cv').toDataURL(), tab + '-qr.png');
+      };
+      $('#svg').onclick = () => {
+        const s =
+          tab === 'bar'
+            ? new XMLSerializer().serializeToString($('#bar'))
+            : matrix && svgQR(matrix, o());
+        if (s)
+          save(
+            URL.createObjectURL(new Blob([s], { type: 'image/svg+xml' })),
+            (tab === 'bar' ? 'barcode' : tab + '-qr') + '.svg',
+          );
+      };
+      document.querySelectorAll('.tab').forEach(
+        (b) =>
+          (b.onclick = () => {
+            document.querySelectorAll('.tab').forEach((x) => x.classList.remove('on'));
+            b.classList.add('on');
+            tab = b.dataset.t;
+            render();
+          }),
+      );
+      document
+        .querySelectorAll('input,textarea,select')
+        .forEach((e) => e.addEventListener('input', render));
+      $('#logo').onchange = (e) => {
+        const f = e.target.files[0];
+        if (!f) {
+          logo = null;
+          return render();
+        }
+        const i = new Image();
+        i.onload = () => {
+          logo = i;
+          render();
+        };
+        i.src = URL.createObjectURL(f);
+      };
+      render();
+    </script>
+  </body>
+</html>

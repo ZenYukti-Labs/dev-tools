@@ -1,137 +1,565 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>UTM Builder - Free UTM Campaign URL Builder | Offline & Open Source</title>
-<meta name="description" content="Build and parse UTM campaign URLs, use presets, generate an offline QR code and keep a local history. 100% client-side.">
-<link rel="canonical" href="https://utm-builder.zenyukti.in/">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="ZenYukti Labs">
-<meta property="og:title" content="UTM Builder - Free UTM Link Builder">
-<meta property="og:description" content="Build and parse UTM campaign URLs, use presets, generate an offline QR code and keep a local history. 100% client-side.">
-<meta property="og:url" content="https://utm-builder.zenyukti.in/">
-<meta name="twitter:card" content="summary_large_image">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "UTM Builder", "url": "https://utm-builder.zenyukti.in", "description": "Build and parse UTM campaign URLs, use presets, generate an offline QR code and keep a local history. 100% client-side.", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "browserRequirements": "Requires a modern browser with JavaScript enabled.", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "author": {"@type": "Organization", "name": "ZenYukti Labs", "url": "https://zenyukti.in"}}</script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.tailwindcss.com"></script>
-<style type="text/tailwindcss">
-body{font-family:Inter,system-ui,sans-serif;@apply bg-slate-50 text-slate-900}
-.inp{@apply w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-slate-900}
-.btn{@apply rounded-xl bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700}
-.btn2{@apply rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium hover:bg-slate-100}
-.card{@apply rounded-2xl border border-slate-200 bg-white p-5}
-.lbl{@apply mb-1 mt-3 block text-xs font-medium text-slate-500}
-</style></head>
-<body>
-<header class="border-b bg-white"><div class="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
-<a href="https://zenyukti.in" class="font-semibold">ZenYukti Labs</a>
-<div class="flex items-center gap-3 text-sm"><span class="rounded-full bg-emerald-50 text-emerald-700 px-3 py-1 text-xs font-medium">100% Private</span><a class="text-slate-600 hover:text-slate-900" href="https://github.com/ZenYukti">GitHub</a></div></div></header>
-<main class="max-w-6xl mx-auto px-4 py-10">
-<h1 class="text-3xl md:text-4xl font-bold tracking-tight">UTM Builder</h1>
-<p class="mt-2 text-slate-600 max-w-2xl">Create trackable campaign links, parse existing UTMs and generate a QR code offline.</p>
-<div class="grid lg:grid-cols-2 gap-6 mt-8">
-<div class="card">
- <div class="flex gap-2 flex-wrap mb-2"><span class="text-xs text-slate-500 self-center">Presets:</span><button class="btn2" data-p="google">Google Ads</button><button class="btn2" data-p="newsletter">Newsletter</button><button class="btn2" data-p="social">Social</button><button class="btn2" id="clear">Clear</button></div>
- <label class="lbl">Website URL *</label><input id="base" class="inp" placeholder="https://example.com/landing">
- <div class="grid grid-cols-2 gap-x-3">
- <div><label class="lbl">utm_source *</label><input id="utm_source" class="inp"></div>
- <div><label class="lbl">utm_medium *</label><input id="utm_medium" class="inp"></div>
- <div><label class="lbl">utm_campaign *</label><input id="utm_campaign" class="inp"></div>
- <div><label class="lbl">utm_id</label><input id="utm_id" class="inp"></div>
- <div><label class="lbl">utm_term</label><input id="utm_term" class="inp"></div>
- <div><label class="lbl">utm_content</label><input id="utm_content" class="inp"></div></div>
- <hr class="my-5"><p class="text-sm font-medium">Campaign name builder</p>
- <div class="grid grid-cols-3 gap-2 mt-2"><input id="cb_name" class="inp" placeholder="Name"><input id="cb_date" type="month" class="inp"><input id="cb_region" class="inp" placeholder="Region"></div>
- <button id="cb" class="btn2 mt-2">Use as utm_campaign</button>
- <hr class="my-5"><p class="text-sm font-medium">Parse an existing URL</p>
- <div class="flex gap-2 mt-2"><input id="parseIn" class="inp" placeholder="Paste URL with UTMs"><button id="parse" class="btn">Parse</button></div>
-</div>
-<div class="space-y-6">
- <div class="card"><p class="text-xs font-medium text-slate-500">Result URL</p>
- <textarea id="out" readonly rows="4" class="inp font-mono text-xs mt-2"></textarea>
- <div class="flex gap-2 mt-2"><button id="copy" class="btn">Copy</button><button id="save" class="btn2">Save to history</button></div>
- <div class="mt-5 flex items-center gap-4"><canvas id="qr" width="200" height="200" class="rounded-xl border"></canvas><div><p id="qrmsg" class="text-xs text-slate-500 mb-2">QR is generated offline.</p><button id="dl" class="btn2">Download PNG</button></div></div></div>
- <div class="card"><div class="flex justify-between"><p class="font-semibold">History</p><button id="hclear" class="btn2">Clear</button></div><ul id="hist" class="mt-3 space-y-2 text-xs"></ul></div>
-</div></div>
-<section class="mt-16"><h2 class="text-2xl font-bold mb-4">FAQ</h2><div class="space-y-3">
-<details class="card"><summary class="font-medium cursor-pointer">What are UTM parameters?</summary><p class="mt-2 text-sm text-slate-600">UTM tags are query parameters (utm_source, utm_medium, utm_campaign…) that analytics tools read to attribute traffic.</p></details>
-<details class="card"><summary class="font-medium cursor-pointer">Which UTM fields are required?</summary><p class="mt-2 text-sm text-slate-600">Source, medium and campaign are the standard three. Term, content and id are optional.</p></details>
-<details class="card"><summary class="font-medium cursor-pointer">Should UTMs be lowercase?</summary><p class="mt-2 text-sm text-slate-600">Yes. Analytics tools are case-sensitive, so "Email" and "email" would be split into separate rows. Use lowercase with hyphens.</p></details>
-<details class="card"><summary class="font-medium cursor-pointer">Does the QR code need internet?</summary><p class="mt-2 text-sm text-slate-600">No. It is encoded with a built-in generator and drawn on a canvas in your browser.</p></details>
-<details class="card"><summary class="font-medium cursor-pointer">Where is my history stored?</summary><p class="mt-2 text-sm text-slate-600">Only in your browser's localStorage. Clear it any time with the Clear button.</p></details>
-</div></section>
-</main>
-<footer class="border-t bg-white mt-16"><div class="max-w-6xl mx-auto px-4 py-8 text-sm text-slate-500 space-y-2">
-<p>Built by ZenYukti Labs • Open Source MIT</p>
-<p class="flex flex-wrap gap-4"><a href="https://zenyukti.in" class="hover:text-slate-900">zenyukti.in</a><a href="https://github.com/zenyukti-labs/dev-tools" class="hover:text-slate-900">GitHub</a><a href="https://go.zenyukti.in/discord" class="hover:text-slate-900">go.zenyukti.in/discord</a><a href="https://twitter.com/zenyukti" class="hover:text-slate-900">@zenyukti</a></p>
-</div></footer>
-<script>
-function qrMatrix(text){
- const ECC=[0,10,16,26,18,24,16,18,22,22,26,30,22,22,24,24,28,28,26,26,26,26,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28];
- const BLK=[0,1,1,1,2,2,4,4,4,5,5,5,8,9,9,10,10,11,13,14,16,17,17,18,20,21,23,25,26,28,29,31,33,35,37,38,40,43,45,47,49];
- const raw=v=>{let r=(16*v+128)*v+64;if(v>=2){const a=(v/7|0)+2;r-=(25*a-10)*a-55;if(v>=7)r-=36}return r};
- const data=[...new TextEncoder().encode(text)];
- let v=1;for(;v<=40;v++){const cap=(raw(v)>>3)-ECC[v]*BLK[v];if(4+(v<10?8:16)+8*data.length<=cap*8)break}
- if(v>40)throw new Error('Too long');
- const bits=[],put=(x,n)=>{for(let i=n-1;i>=0;i--)bits.push((x>>>i)&1)};
- put(4,4);put(data.length,v<10?8:16);data.forEach(b=>put(b,8));
- const cap=((raw(v)>>3)-ECC[v]*BLK[v])*8;
- put(0,Math.min(4,cap-bits.length));while(bits.length%8)bits.push(0);
- for(let p=0xEC;bits.length<cap;p^=0xEC^0x11)put(p,8);
- const cw=[];for(let i=0;i<bits.length;i+=8)cw.push(parseInt(bits.slice(i,i+8).join(''),2));
- const mul=(x,y)=>{let z=0;for(let i=7;i>=0;i--){z=(z<<1)^((z>>>7)*0x11D);z^=((y>>>i)&1)*x}return z};
- const d=ECC[v],div=new Array(d).fill(0);div[d-1]=1;let root=1;
- for(let i=0;i<d;i++){for(let j=0;j<d;j++){div[j]=mul(div[j],root);if(j+1<d)div[j]^=div[j+1]}root=mul(root,2)}
- const nb=BLK[v],rc=raw(v)>>3,ns=nb-rc%nb,sl=rc/nb|0,blocks=[];
- for(let i=0,k=0;i<nb;i++){const dat=cw.slice(k,k+sl-d+(i<ns?0:1));k+=dat.length;
-  const r=new Array(d).fill(0);for(const b of dat){const f=b^r.shift();r.push(0);div.forEach((c,j)=>r[j]^=mul(c,f))}
-  if(i<ns)dat.push(0);blocks.push(dat.concat(r))}
- const fin=[];for(let i=0;i<blocks[0].length;i++)blocks.forEach((b,j)=>{if(i!=sl-d||j>=ns)fin.push(b[i])});
- const n=v*4+17,m=Array.from({length:n},()=>new Array(n).fill(false)),fn=Array.from({length:n},()=>new Array(n).fill(false));
- const set=(x,y,c)=>{m[y][x]=c;fn[y][x]=true};
- for(let i=0;i<n;i++){set(6,i,i%2==0);set(i,6,i%2==0)}
- for(const[x,y]of[[3,3],[n-4,3],[3,n-4]])for(let dy=-4;dy<=4;dy++)for(let dx=-4;dx<=4;dx++){const q=Math.max(Math.abs(dx),Math.abs(dy)),xx=x+dx,yy=y+dy;if(xx>=0&&xx<n&&yy>=0&&yy<n)set(xx,yy,q!=2&&q!=4)}
- const na=v==1?0:(v/7|0)+2,step=v==32?26:Math.ceil((v*4+4)/(na*2-2))*2,ap=na?[6]:[];
- for(let p=n-7;ap.length<na;p-=step)ap.splice(1,0,p);
- for(let i=0;i<na;i++)for(let j=0;j<na;j++){if((i==0&&j==0)||(i==0&&j==na-1)||(i==na-1&&j==0))continue;for(let dy=-2;dy<=2;dy++)for(let dx=-2;dx<=2;dx++)set(ap[i]+dx,ap[j]+dy,Math.max(Math.abs(dx),Math.abs(dy))!=1)}
- const fmt=mk=>{let r=mk;for(let i=0;i<10;i++)r=(r<<1)^((r>>>9)*0x537);const b=((mk<<10)|r)^0x5412,g=i=>((b>>>i)&1)!=0;
-  for(let i=0;i<=5;i++)set(8,i,g(i));set(8,7,g(6));set(8,8,g(7));set(7,8,g(8));for(let i=9;i<15;i++)set(14-i,8,g(i));
-  for(let i=0;i<8;i++)set(n-1-i,8,g(i));for(let i=8;i<15;i++)set(8,n-15+i,g(i));set(8,n-8,true)};
- fmt(0);
- if(v>=7){let r=v;for(let i=0;i<12;i++)r=(r<<1)^((r>>>11)*0x1F25);const b=(v<<12)|r;for(let i=0;i<18;i++){const c=((b>>>i)&1)!=0,a=n-11+i%3,e=i/3|0;set(a,e,c);set(e,a,c)}}
- let i=0;for(let right=n-1;right>=1;right-=2){if(right==6)right=5;for(let vert=0;vert<n;vert++)for(let j=0;j<2;j++){const x=right-j,up=((right+1)&2)==0,y=up?n-1-vert:vert;if(!fn[y][x]&&i<fin.length*8){m[y][x]=((fin[i>>>3]>>>(7-(i&7)))&1)!=0;i++}}}
- const mask=(mk)=>{for(let y=0;y<n;y++)for(let x=0;x<n;x++){let inv;switch(mk){case 0:inv=(x+y)%2==0;break;case 1:inv=y%2==0;break;case 2:inv=x%3==0;break;case 3:inv=(x+y)%3==0;break;case 4:inv=((x/3|0)+(y/2|0))%2==0;break;case 5:inv=x*y%2+x*y%3==0;break;case 6:inv=(x*y%2+x*y%3)%2==0;break;default:inv=((x+y)%2+x*y%3)%2==0}if(!fn[y][x]&&inv)m[y][x]=!m[y][x]}};
- const pen=()=>{let s=0;for(let a=0;a<n;a++){let rr=1,rc2=1;for(let b=1;b<n;b++){rr=m[a][b]==m[a][b-1]?rr+1:1;rc2=m[b][a]==m[b-1][a]?rc2+1:1;if(rr==5)s+=3;else if(rr>5)s++;if(rc2==5)s+=3;else if(rc2>5)s++}}
-  for(let y=0;y<n-1;y++)for(let x=0;x<n-1;x++)if(m[y][x]==m[y][x+1]&&m[y][x]==m[y+1][x]&&m[y][x]==m[y+1][x+1])s+=3;return s};
- let best=0,bp=1e9;for(let k=0;k<8;k++){mask(k);fmt(k);const p=pen();if(p<bp){bp=p;best=k}mask(k)}
- mask(best);fmt(best);return m;
-}
-const $=s=>document.querySelector(s),F=['utm_source','utm_medium','utm_campaign','utm_id','utm_term','utm_content'];
-const PRE={google:{utm_source:'google',utm_medium:'cpc'},newsletter:{utm_source:'newsletter',utm_medium:'email'},social:{utm_source:'twitter',utm_medium:'social'}};
-const slug=s=>s.trim().toLowerCase().replace(/\s+/g,'-');
-function build(){
- let b=$('#base').value.trim();if(!b)return '';
- let u;try{u=new URL(/^https?:\/\//.test(b)?b:'https://'+b)}catch{return ''}
- F.forEach(k=>{const v=$('#'+k).value.trim();if(v)u.searchParams.set(k,v);else u.searchParams.delete(k)});
- return u.href;
-}
-function drawQR(text){
- const cv=$('#qr'),g=cv.getContext('2d');g.fillStyle='#fff';g.fillRect(0,0,200,200);
- if(!text){$('#qrmsg').textContent='Enter a URL to generate a QR.';return}
- try{const m=qrMatrix(text),q=3,c=200/(m.length+q*2);g.fillStyle='#0f172a';
-  m.forEach((r,y)=>r.forEach((v,x)=>{if(v)g.fillRect((x+q)*c,(y+q)*c,c+.5,c+.5)}));$('#qrmsg').textContent='QR is generated offline.'}
- catch(e){$('#qrmsg').textContent='URL too long for QR.'}
-}
-function update(){const u=build();$('#out').value=u;drawQR(u)}
-const hist=()=>JSON.parse(localStorage.getItem('utm_hist')||'[]');
-function renderHist(){const h=hist();$('#hist').innerHTML=h.length?'':'<li class="text-slate-400">Nothing saved yet.</li>';h.forEach((u,i)=>{const li=document.createElement('li');li.className='flex gap-2 items-center';li.innerHTML='<span class="truncate flex-1 font-mono"></span><button class="btn2">Load</button>';li.firstChild.textContent=u;li.lastChild.onclick=()=>{$('#parseIn').value=u;parseUrl(u)};$('#hist').appendChild(li)})}
-function parseUrl(s){try{const u=new URL(s);F.forEach(k=>$('#'+k).value=u.searchParams.get(k)||'');F.forEach(k=>u.searchParams.delete(k));$('#base').value=u.href;update()}catch{alert('Invalid URL')}}
-document.querySelectorAll('input').forEach(i=>i.addEventListener('input',update));
-document.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{Object.entries(PRE[b.dataset.p]).forEach(([k,v])=>$('#'+k).value=v);update()});
-$('#clear').onclick=()=>{document.querySelectorAll('input').forEach(i=>i.value='');update()};
-$('#cb').onclick=()=>{$('#utm_campaign').value=[$('#cb_name').value,$('#cb_date').value,$('#cb_region').value].filter(Boolean).map(slug).join('_');update()};
-$('#parse').onclick=()=>parseUrl($('#parseIn').value.trim());
-$('#copy').onclick=e=>{navigator.clipboard.writeText($('#out').value);e.target.textContent='Copied!';setTimeout(()=>e.target.textContent='Copy',1200)};
-$('#save').onclick=()=>{const u=$('#out').value;if(!u)return;localStorage.setItem('utm_hist',JSON.stringify([u,...hist().filter(x=>x!==u)].slice(0,10)));renderHist()};
-$('#hclear').onclick=()=>{localStorage.removeItem('utm_hist');renderHist()};
-$('#dl').onclick=()=>{const a=document.createElement('a');a.download='utm-qr.png';a.href=$('#qr').toDataURL();a.click()};
-renderHist();update();
-</script></body></html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>UTM Builder - Free UTM Campaign URL Builder | Offline & Open Source</title>
+    <meta
+      name="description"
+      content="Build and parse UTM campaign URLs, use presets, generate an offline QR code and keep a local history. 100% client-side."
+    />
+    <link rel="canonical" href="https://utm-builder.zenyukti.in/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="ZenYukti Labs" />
+    <meta property="og:title" content="UTM Builder - Free UTM Link Builder" />
+    <meta
+      property="og:description"
+      content="Build and parse UTM campaign URLs, use presets, generate an offline QR code and keep a local history. 100% client-side."
+    />
+    <meta property="og:url" content="https://utm-builder.zenyukti.in/" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "UTM Builder",
+        "url": "https://utm-builder.zenyukti.in",
+        "description": "Build and parse UTM campaign URLs, use presets, generate an offline QR code and keep a local history. 100% client-side.",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Any",
+        "browserRequirements": "Requires a modern browser with JavaScript enabled.",
+        "isAccessibleForFree": true,
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "author": { "@type": "Organization", "name": "ZenYukti Labs", "url": "https://zenyukti.in" }
+      }
+    </script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style type="text/tailwindcss">
+      body {
+        font-family: Inter, system-ui, sans-serif;
+        @apply bg-slate-50 text-slate-900;
+      }
+      .inp {
+        @apply w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-slate-900;
+      }
+      .btn {
+        @apply rounded-xl bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700;
+      }
+      .btn2 {
+        @apply rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium hover:bg-slate-100;
+      }
+      .card {
+        @apply rounded-2xl border border-slate-200 bg-white p-5;
+      }
+      .lbl {
+        @apply mb-1 mt-3 block text-xs font-medium text-slate-500;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="border-b bg-white">
+      <div class="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
+        <a href="https://zenyukti.in" class="font-semibold">ZenYukti Labs</a>
+        <div class="flex items-center gap-3 text-sm">
+          <span class="rounded-full bg-emerald-50 text-emerald-700 px-3 py-1 text-xs font-medium">
+            100% Private
+          </span>
+          <a class="text-slate-600 hover:text-slate-900" href="https://github.com/ZenYukti">
+            GitHub
+          </a>
+        </div>
+      </div>
+    </header>
+    <main class="max-w-6xl mx-auto px-4 py-10">
+      <h1 class="text-3xl md:text-4xl font-bold tracking-tight">UTM Builder</h1>
+      <p class="mt-2 text-slate-600 max-w-2xl">
+        Create trackable campaign links, parse existing UTMs and generate a QR code offline.
+      </p>
+      <div class="grid lg:grid-cols-2 gap-6 mt-8">
+        <div class="card">
+          <div class="flex gap-2 flex-wrap mb-2">
+            <span class="text-xs text-slate-500 self-center">Presets:</span>
+            <button class="btn2" data-p="google">Google Ads</button>
+            <button class="btn2" data-p="newsletter">Newsletter</button>
+            <button class="btn2" data-p="social">Social</button>
+            <button class="btn2" id="clear">Clear</button>
+          </div>
+          <label class="lbl">Website URL *</label>
+          <input id="base" class="inp" placeholder="https://example.com/landing" />
+          <div class="grid grid-cols-2 gap-x-3">
+            <div>
+              <label class="lbl">utm_source *</label>
+              <input id="utm_source" class="inp" />
+            </div>
+            <div>
+              <label class="lbl">utm_medium *</label>
+              <input id="utm_medium" class="inp" />
+            </div>
+            <div>
+              <label class="lbl">utm_campaign *</label>
+              <input id="utm_campaign" class="inp" />
+            </div>
+            <div>
+              <label class="lbl">utm_id</label>
+              <input id="utm_id" class="inp" />
+            </div>
+            <div>
+              <label class="lbl">utm_term</label>
+              <input id="utm_term" class="inp" />
+            </div>
+            <div>
+              <label class="lbl">utm_content</label>
+              <input id="utm_content" class="inp" />
+            </div>
+          </div>
+          <hr class="my-5" />
+          <p class="text-sm font-medium">Campaign name builder</p>
+          <div class="grid grid-cols-3 gap-2 mt-2">
+            <input id="cb_name" class="inp" placeholder="Name" />
+            <input id="cb_date" type="month" class="inp" />
+            <input id="cb_region" class="inp" placeholder="Region" />
+          </div>
+          <button id="cb" class="btn2 mt-2">Use as utm_campaign</button>
+          <hr class="my-5" />
+          <p class="text-sm font-medium">Parse an existing URL</p>
+          <div class="flex gap-2 mt-2">
+            <input id="parseIn" class="inp" placeholder="Paste URL with UTMs" />
+            <button id="parse" class="btn">Parse</button>
+          </div>
+        </div>
+        <div class="space-y-6">
+          <div class="card">
+            <p class="text-xs font-medium text-slate-500">Result URL</p>
+            <textarea id="out" readonly rows="4" class="inp font-mono text-xs mt-2"></textarea>
+            <div class="flex gap-2 mt-2">
+              <button id="copy" class="btn">Copy</button>
+              <button id="save" class="btn2">Save to history</button>
+            </div>
+            <div class="mt-5 flex items-center gap-4">
+              <canvas id="qr" width="200" height="200" class="rounded-xl border"></canvas>
+              <div>
+                <p id="qrmsg" class="text-xs text-slate-500 mb-2">QR is generated offline.</p>
+                <button id="dl" class="btn2">Download PNG</button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="flex justify-between">
+              <p class="font-semibold">History</p>
+              <button id="hclear" class="btn2">Clear</button>
+            </div>
+            <ul id="hist" class="mt-3 space-y-2 text-xs"></ul>
+          </div>
+        </div>
+      </div>
+      <section class="mt-16">
+        <h2 class="text-2xl font-bold mb-4">FAQ</h2>
+        <div class="space-y-3">
+          <details class="card">
+            <summary class="font-medium cursor-pointer">What are UTM parameters?</summary>
+            <p class="mt-2 text-sm text-slate-600">
+              UTM tags are query parameters (utm_source, utm_medium, utm_campaign…) that analytics
+              tools read to attribute traffic.
+            </p>
+          </details>
+          <details class="card">
+            <summary class="font-medium cursor-pointer">Which UTM fields are required?</summary>
+            <p class="mt-2 text-sm text-slate-600">
+              Source, medium and campaign are the standard three. Term, content and id are optional.
+            </p>
+          </details>
+          <details class="card">
+            <summary class="font-medium cursor-pointer">Should UTMs be lowercase?</summary>
+            <p class="mt-2 text-sm text-slate-600">
+              Yes. Analytics tools are case-sensitive, so "Email" and "email" would be split into
+              separate rows. Use lowercase with hyphens.
+            </p>
+          </details>
+          <details class="card">
+            <summary class="font-medium cursor-pointer">Does the QR code need internet?</summary>
+            <p class="mt-2 text-sm text-slate-600">
+              No. It is encoded with a built-in generator and drawn on a canvas in your browser.
+            </p>
+          </details>
+          <details class="card">
+            <summary class="font-medium cursor-pointer">Where is my history stored?</summary>
+            <p class="mt-2 text-sm text-slate-600">
+              Only in your browser's localStorage. Clear it any time with the Clear button.
+            </p>
+          </details>
+        </div>
+      </section>
+    </main>
+    <footer class="border-t bg-white mt-16">
+      <div class="max-w-6xl mx-auto px-4 py-8 text-sm text-slate-500 space-y-2">
+        <p>Built by ZenYukti Labs • Open Source MIT</p>
+        <p class="flex flex-wrap gap-4">
+          <a href="https://zenyukti.in" class="hover:text-slate-900">zenyukti.in</a>
+          <a href="https://github.com/zenyukti-labs/dev-tools" class="hover:text-slate-900">
+            GitHub
+          </a>
+          <a href="https://go.zenyukti.in/discord" class="hover:text-slate-900">
+            go.zenyukti.in/discord
+          </a>
+          <a href="https://twitter.com/zenyukti" class="hover:text-slate-900">@zenyukti</a>
+        </p>
+      </div>
+    </footer>
+    <script>
+      function qrMatrix(text) {
+        const ECC = [
+          0, 10, 16, 26, 18, 24, 16, 18, 22, 22, 26, 30, 22, 22, 24, 24, 28, 28, 26, 26, 26, 26, 28,
+          28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28,
+        ];
+        const BLK = [
+          0, 1, 1, 1, 2, 2, 4, 4, 4, 5, 5, 5, 8, 9, 9, 10, 10, 11, 13, 14, 16, 17, 17, 18, 20, 21,
+          23, 25, 26, 28, 29, 31, 33, 35, 37, 38, 40, 43, 45, 47, 49,
+        ];
+        const raw = (v) => {
+          let r = (16 * v + 128) * v + 64;
+          if (v >= 2) {
+            const a = ((v / 7) | 0) + 2;
+            r -= (25 * a - 10) * a - 55;
+            if (v >= 7) r -= 36;
+          }
+          return r;
+        };
+        const data = [...new TextEncoder().encode(text)];
+        let v = 1;
+        for (; v <= 40; v++) {
+          const cap = (raw(v) >> 3) - ECC[v] * BLK[v];
+          if (4 + (v < 10 ? 8 : 16) + 8 * data.length <= cap * 8) break;
+        }
+        if (v > 40) throw new Error('Too long');
+        const bits = [],
+          put = (x, n) => {
+            for (let i = n - 1; i >= 0; i--) bits.push((x >>> i) & 1);
+          };
+        put(4, 4);
+        put(data.length, v < 10 ? 8 : 16);
+        data.forEach((b) => put(b, 8));
+        const cap = ((raw(v) >> 3) - ECC[v] * BLK[v]) * 8;
+        put(0, Math.min(4, cap - bits.length));
+        while (bits.length % 8) bits.push(0);
+        for (let p = 0xec; bits.length < cap; p ^= 0xec ^ 0x11) put(p, 8);
+        const cw = [];
+        for (let i = 0; i < bits.length; i += 8)
+          cw.push(parseInt(bits.slice(i, i + 8).join(''), 2));
+        const mul = (x, y) => {
+          let z = 0;
+          for (let i = 7; i >= 0; i--) {
+            z = (z << 1) ^ ((z >>> 7) * 0x11d);
+            z ^= ((y >>> i) & 1) * x;
+          }
+          return z;
+        };
+        const d = ECC[v],
+          div = new Array(d).fill(0);
+        div[d - 1] = 1;
+        let root = 1;
+        for (let i = 0; i < d; i++) {
+          for (let j = 0; j < d; j++) {
+            div[j] = mul(div[j], root);
+            if (j + 1 < d) div[j] ^= div[j + 1];
+          }
+          root = mul(root, 2);
+        }
+        const nb = BLK[v],
+          rc = raw(v) >> 3,
+          ns = nb - (rc % nb),
+          sl = (rc / nb) | 0,
+          blocks = [];
+        for (let i = 0, k = 0; i < nb; i++) {
+          const dat = cw.slice(k, k + sl - d + (i < ns ? 0 : 1));
+          k += dat.length;
+          const r = new Array(d).fill(0);
+          for (const b of dat) {
+            const f = b ^ r.shift();
+            r.push(0);
+            div.forEach((c, j) => (r[j] ^= mul(c, f)));
+          }
+          if (i < ns) dat.push(0);
+          blocks.push(dat.concat(r));
+        }
+        const fin = [];
+        for (let i = 0; i < blocks[0].length; i++)
+          blocks.forEach((b, j) => {
+            if (i != sl - d || j >= ns) fin.push(b[i]);
+          });
+        const n = v * 4 + 17,
+          m = Array.from({ length: n }, () => new Array(n).fill(false)),
+          fn = Array.from({ length: n }, () => new Array(n).fill(false));
+        const set = (x, y, c) => {
+          m[y][x] = c;
+          fn[y][x] = true;
+        };
+        for (let i = 0; i < n; i++) {
+          set(6, i, i % 2 == 0);
+          set(i, 6, i % 2 == 0);
+        }
+        for (const [x, y] of [
+          [3, 3],
+          [n - 4, 3],
+          [3, n - 4],
+        ])
+          for (let dy = -4; dy <= 4; dy++)
+            for (let dx = -4; dx <= 4; dx++) {
+              const q = Math.max(Math.abs(dx), Math.abs(dy)),
+                xx = x + dx,
+                yy = y + dy;
+              if (xx >= 0 && xx < n && yy >= 0 && yy < n) set(xx, yy, q != 2 && q != 4);
+            }
+        const na = v == 1 ? 0 : ((v / 7) | 0) + 2,
+          step = v == 32 ? 26 : Math.ceil((v * 4 + 4) / (na * 2 - 2)) * 2,
+          ap = na ? [6] : [];
+        for (let p = n - 7; ap.length < na; p -= step) ap.splice(1, 0, p);
+        for (let i = 0; i < na; i++)
+          for (let j = 0; j < na; j++) {
+            if ((i == 0 && j == 0) || (i == 0 && j == na - 1) || (i == na - 1 && j == 0)) continue;
+            for (let dy = -2; dy <= 2; dy++)
+              for (let dx = -2; dx <= 2; dx++)
+                set(ap[i] + dx, ap[j] + dy, Math.max(Math.abs(dx), Math.abs(dy)) != 1);
+          }
+        const fmt = (mk) => {
+          let r = mk;
+          for (let i = 0; i < 10; i++) r = (r << 1) ^ ((r >>> 9) * 0x537);
+          const b = ((mk << 10) | r) ^ 0x5412,
+            g = (i) => ((b >>> i) & 1) != 0;
+          for (let i = 0; i <= 5; i++) set(8, i, g(i));
+          set(8, 7, g(6));
+          set(8, 8, g(7));
+          set(7, 8, g(8));
+          for (let i = 9; i < 15; i++) set(14 - i, 8, g(i));
+          for (let i = 0; i < 8; i++) set(n - 1 - i, 8, g(i));
+          for (let i = 8; i < 15; i++) set(8, n - 15 + i, g(i));
+          set(8, n - 8, true);
+        };
+        fmt(0);
+        if (v >= 7) {
+          let r = v;
+          for (let i = 0; i < 12; i++) r = (r << 1) ^ ((r >>> 11) * 0x1f25);
+          const b = (v << 12) | r;
+          for (let i = 0; i < 18; i++) {
+            const c = ((b >>> i) & 1) != 0,
+              a = n - 11 + (i % 3),
+              e = (i / 3) | 0;
+            set(a, e, c);
+            set(e, a, c);
+          }
+        }
+        let i = 0;
+        for (let right = n - 1; right >= 1; right -= 2) {
+          if (right == 6) right = 5;
+          for (let vert = 0; vert < n; vert++)
+            for (let j = 0; j < 2; j++) {
+              const x = right - j,
+                up = ((right + 1) & 2) == 0,
+                y = up ? n - 1 - vert : vert;
+              if (!fn[y][x] && i < fin.length * 8) {
+                m[y][x] = ((fin[i >>> 3] >>> (7 - (i & 7))) & 1) != 0;
+                i++;
+              }
+            }
+        }
+        const mask = (mk) => {
+          for (let y = 0; y < n; y++)
+            for (let x = 0; x < n; x++) {
+              let inv;
+              switch (mk) {
+                case 0:
+                  inv = (x + y) % 2 == 0;
+                  break;
+                case 1:
+                  inv = y % 2 == 0;
+                  break;
+                case 2:
+                  inv = x % 3 == 0;
+                  break;
+                case 3:
+                  inv = (x + y) % 3 == 0;
+                  break;
+                case 4:
+                  inv = (((x / 3) | 0) + ((y / 2) | 0)) % 2 == 0;
+                  break;
+                case 5:
+                  inv = ((x * y) % 2) + ((x * y) % 3) == 0;
+                  break;
+                case 6:
+                  inv = (((x * y) % 2) + ((x * y) % 3)) % 2 == 0;
+                  break;
+                default:
+                  inv = (((x + y) % 2) + ((x * y) % 3)) % 2 == 0;
+              }
+              if (!fn[y][x] && inv) m[y][x] = !m[y][x];
+            }
+        };
+        const pen = () => {
+          let s = 0;
+          for (let a = 0; a < n; a++) {
+            let rr = 1,
+              rc2 = 1;
+            for (let b = 1; b < n; b++) {
+              rr = m[a][b] == m[a][b - 1] ? rr + 1 : 1;
+              rc2 = m[b][a] == m[b - 1][a] ? rc2 + 1 : 1;
+              if (rr == 5) s += 3;
+              else if (rr > 5) s++;
+              if (rc2 == 5) s += 3;
+              else if (rc2 > 5) s++;
+            }
+          }
+          for (let y = 0; y < n - 1; y++)
+            for (let x = 0; x < n - 1; x++)
+              if (m[y][x] == m[y][x + 1] && m[y][x] == m[y + 1][x] && m[y][x] == m[y + 1][x + 1])
+                s += 3;
+          return s;
+        };
+        let best = 0,
+          bp = 1e9;
+        for (let k = 0; k < 8; k++) {
+          mask(k);
+          fmt(k);
+          const p = pen();
+          if (p < bp) {
+            bp = p;
+            best = k;
+          }
+          mask(k);
+        }
+        mask(best);
+        fmt(best);
+        return m;
+      }
+      const $ = (s) => document.querySelector(s),
+        F = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_id', 'utm_term', 'utm_content'];
+      const PRE = {
+        google: { utm_source: 'google', utm_medium: 'cpc' },
+        newsletter: { utm_source: 'newsletter', utm_medium: 'email' },
+        social: { utm_source: 'twitter', utm_medium: 'social' },
+      };
+      const slug = (s) => s.trim().toLowerCase().replace(/\s+/g, '-');
+      function build() {
+        let b = $('#base').value.trim();
+        if (!b) return '';
+        let u;
+        try {
+          u = new URL(/^https?:\/\//.test(b) ? b : 'https://' + b);
+        } catch {
+          return '';
+        }
+        F.forEach((k) => {
+          const v = $('#' + k).value.trim();
+          if (v) u.searchParams.set(k, v);
+          else u.searchParams.delete(k);
+        });
+        return u.href;
+      }
+      function drawQR(text) {
+        const cv = $('#qr'),
+          g = cv.getContext('2d');
+        g.fillStyle = '#fff';
+        g.fillRect(0, 0, 200, 200);
+        if (!text) {
+          $('#qrmsg').textContent = 'Enter a URL to generate a QR.';
+          return;
+        }
+        try {
+          const m = qrMatrix(text),
+            q = 3,
+            c = 200 / (m.length + q * 2);
+          g.fillStyle = '#0f172a';
+          m.forEach((r, y) =>
+            r.forEach((v, x) => {
+              if (v) g.fillRect((x + q) * c, (y + q) * c, c + 0.5, c + 0.5);
+            }),
+          );
+          $('#qrmsg').textContent = 'QR is generated offline.';
+        } catch (e) {
+          $('#qrmsg').textContent = 'URL too long for QR.';
+        }
+      }
+      function update() {
+        const u = build();
+        $('#out').value = u;
+        drawQR(u);
+      }
+      const hist = () => JSON.parse(localStorage.getItem('utm_hist') || '[]');
+      function renderHist() {
+        const h = hist();
+        $('#hist').innerHTML = h.length ? '' : '<li class="text-slate-400">Nothing saved yet.</li>';
+        h.forEach((u, i) => {
+          const li = document.createElement('li');
+          li.className = 'flex gap-2 items-center';
+          li.innerHTML =
+            '<span class="truncate flex-1 font-mono"></span><button class="btn2">Load</button>';
+          li.firstChild.textContent = u;
+          li.lastChild.onclick = () => {
+            $('#parseIn').value = u;
+            parseUrl(u);
+          };
+          $('#hist').appendChild(li);
+        });
+      }
+      function parseUrl(s) {
+        try {
+          const u = new URL(s);
+          F.forEach((k) => ($('#' + k).value = u.searchParams.get(k) || ''));
+          F.forEach((k) => u.searchParams.delete(k));
+          $('#base').value = u.href;
+          update();
+        } catch {
+          alert('Invalid URL');
+        }
+      }
+      document.querySelectorAll('input').forEach((i) => i.addEventListener('input', update));
+      document.querySelectorAll('[data-p]').forEach(
+        (b) =>
+          (b.onclick = () => {
+            Object.entries(PRE[b.dataset.p]).forEach(([k, v]) => ($('#' + k).value = v));
+            update();
+          }),
+      );
+      $('#clear').onclick = () => {
+        document.querySelectorAll('input').forEach((i) => (i.value = ''));
+        update();
+      };
+      $('#cb').onclick = () => {
+        $('#utm_campaign').value = [$('#cb_name').value, $('#cb_date').value, $('#cb_region').value]
+          .filter(Boolean)
+          .map(slug)
+          .join('_');
+        update();
+      };
+      $('#parse').onclick = () => parseUrl($('#parseIn').value.trim());
+      $('#copy').onclick = (e) => {
+        navigator.clipboard.writeText($('#out').value);
+        e.target.textContent = 'Copied!';
+        setTimeout(() => (e.target.textContent = 'Copy'), 1200);
+      };
+      $('#save').onclick = () => {
+        const u = $('#out').value;
+        if (!u) return;
+        localStorage.setItem(
+          'utm_hist',
+          JSON.stringify([u, ...hist().filter((x) => x !== u)].slice(0, 10)),
+        );
+        renderHist();
+      };
+      $('#hclear').onclick = () => {
+        localStorage.removeItem('utm_hist');
+        renderHist();
+      };
+      $('#dl').onclick = () => {
+        const a = document.createElement('a');
+        a.download = 'utm-qr.png';
+        a.href = $('#qr').toDataURL();
+        a.click();
+      };
+      renderHist();
+      update();
+    </script>
+  </body>
+</html>

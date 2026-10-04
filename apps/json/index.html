@@ -1,99 +1,394 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>JSON Formatter - Free JSON Validator, Formatter & Minifier | Offline & Open Source</title>
-<meta name="description" content="Format, minify, validate and sort JSON. Explore a collapsible tree and convert to YAML, TypeScript interfaces and CSV. Private and offline.">
-<link rel="canonical" href="https://json-formatter.zenyukti.in/">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="ZenYukti Labs">
-<meta property="og:title" content="JSON Formatter - Format, Validate & Convert JSON">
-<meta property="og:description" content="Format, minify, validate and sort JSON. Explore a collapsible tree and convert to YAML, TypeScript interfaces and CSV. Private and offline.">
-<meta property="og:url" content="https://json-formatter.zenyukti.in/">
-<meta name="twitter:card" content="summary_large_image">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "JSON Formatter", "url": "https://json-formatter.zenyukti.in", "description": "Format, minify, validate and sort JSON. Explore a collapsible tree and convert to YAML, TypeScript interfaces and CSV. Private and offline.", "applicationCategory": "DeveloperApplication", "operatingSystem": "Any", "browserRequirements": "Requires a modern browser with JavaScript enabled.", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "author": {"@type": "Organization", "name": "ZenYukti Labs", "url": "https://zenyukti.in"}}</script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.tailwindcss.com"></script>
-<style type="text/tailwindcss">
-body{font-family:Inter,system-ui,sans-serif;@apply bg-slate-50 text-slate-900}
-.btn{@apply rounded-xl bg-slate-900 px-3 py-1.5 text-xs font-medium text-white hover:bg-slate-700}
-.btn2{@apply rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium hover:bg-slate-100}
-.card{@apply rounded-2xl border border-slate-200 bg-white p-5}
-.tab{@apply rounded-lg px-3 py-1 text-xs font-medium text-slate-500}
-.tab.on{@apply bg-slate-900 text-white}
-#gut,#ta{font-family:ui-monospace,Menlo,monospace;font-size:12px;line-height:20px;padding:8px}
-details.t>summary{cursor:pointer;list-style:none}
-</style></head>
-<body>
-<header class="border-b bg-white"><div class="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
-<a href="https://zenyukti.in" class="font-semibold">ZenYukti Labs</a>
-<div class="flex items-center gap-3 text-sm"><span class="rounded-full bg-emerald-50 text-emerald-700 px-3 py-1 text-xs font-medium">100% Private</span><a class="text-slate-600 hover:text-slate-900" href="https://github.com/ZenYukti">GitHub</a></div></div></header>
-<main class="max-w-6xl mx-auto px-4 py-10">
-<h1 class="text-3xl md:text-4xl font-bold tracking-tight">JSON Formatter</h1>
-<p class="mt-2 text-slate-600 max-w-2xl">Beautify, minify, validate and convert JSON without sending it anywhere.</p>
-<div class="grid lg:grid-cols-2 gap-6 mt-8">
-<div class="card">
- <div class="flex flex-wrap gap-2 mb-3"><button class="btn" id="fmt">Format</button><button class="btn2" id="min">Minify</button><button class="btn2" id="val">Validate</button><button class="btn2" id="sort">Sort keys</button><button class="btn2" id="esc">Escape</button><button class="btn2" id="unesc">Unescape</button></div>
- <div class="flex rounded-xl border border-slate-200 overflow-hidden h-80"><div id="gut" class="bg-slate-50 text-slate-400 text-right select-none overflow-hidden w-12 shrink-0 whitespace-pre"></div><textarea id="ta" spellcheck="false" wrap="off" class="flex-1 outline-none resize-none"></textarea></div>
- <p id="msg" class="text-xs mt-2 min-h-[1rem]"></p>
-</div>
-<div class="card">
- <div class="flex gap-1 mb-3"><button class="tab on" data-t="tree">Tree</button><button class="tab" data-t="yaml">YAML</button><button class="tab" data-t="ts">TypeScript</button><button class="tab" data-t="csv">CSV</button></div>
- <div id="view" class="overflow-auto h-80 text-xs font-mono"></div>
- <button id="copy" class="btn mt-3">Copy output</button>
-</div></div>
-<section class="mt-16"><h2 class="text-2xl font-bold mb-4">FAQ</h2><div class="space-y-3">
-<details class="card"><summary class="font-medium cursor-pointer">How do I format JSON online?</summary><p class="mt-2 text-sm text-slate-600">Paste your JSON on the left and press Format. It is re-indented with two spaces.</p></details>
-<details class="card"><summary class="font-medium cursor-pointer">Is my JSON uploaded?</summary><p class="mt-2 text-sm text-slate-600">No. Everything runs in your browser using JSON.parse; there are no network calls.</p></details>
-<details class="card"><summary class="font-medium cursor-pointer">How are errors reported?</summary><p class="mt-2 text-sm text-slate-600">The parser message is shown and the offending line number is highlighted in red in the gutter.</p></details>
-<details class="card"><summary class="font-medium cursor-pointer">What does Sort keys do?</summary><p class="mt-2 text-sm text-slate-600">It alphabetically sorts object keys recursively, useful for diffs and stable output.</p></details>
-<details class="card"><summary class="font-medium cursor-pointer">When does CSV conversion work?</summary><p class="mt-2 text-sm text-slate-600">When the root is an array of objects. Nested values are serialised as JSON strings.</p></details>
-</div></section>
-</main>
-<footer class="border-t bg-white mt-16"><div class="max-w-6xl mx-auto px-4 py-8 text-sm text-slate-500 space-y-2">
-<p>Built by ZenYukti Labs • Open Source MIT</p>
-<p class="flex flex-wrap gap-4"><a href="https://zenyukti.in" class="hover:text-slate-900">zenyukti.in</a><a href="https://github.com/zenyukti-labs/dev-tools" class="hover:text-slate-900">GitHub</a><a href="https://go.zenyukti.in/discord" class="hover:text-slate-900">go.zenyukti.in/discord</a><a href="https://twitter.com/zenyukti" class="hover:text-slate-900">@zenyukti</a></p>
-</div></footer>
-<script>
-const $=s=>document.querySelector(s),ta=$('#ta'),gut=$('#gut');
-let mode='tree',errLine=0,out='';
-const SAMPLE={name:"ZenYukti Labs",tools:[{slug:"json",private:true},{slug:"qr",private:true}],version:1.2};
-ta.value=JSON.stringify(SAMPLE,null,2);
-function gutter(){const n=ta.value.split('\n').length;gut.innerHTML=Array.from({length:n},(_,i)=>i+1===errLine?`<span style="color:#dc2626;font-weight:700;background:#fee2e2;display:block">${i+1}</span>`:`<span style="display:block">${i+1}</span>`).join('');gut.scrollTop=ta.scrollTop}
-function parse(){try{const v=JSON.parse(ta.value);errLine=0;$('#msg').className='text-xs mt-2 text-emerald-600';$('#msg').textContent='✓ Valid JSON';return{v}}catch(e){const m=/position (\d+)/.exec(e.message);errLine=m?ta.value.slice(0,+m[1]).split('\n').length:1;$('#msg').className='text-xs mt-2 text-red-600';$('#msg').textContent=e.message;return null}}
-const sortK=v=>Array.isArray(v)?v.map(sortK):v&&typeof v==='object'?Object.fromEntries(Object.keys(v).sort().map(k=>[k,sortK(v[k])])):v;
-function act(fn){const p=parse();if(p&&fn)ta.value=fn(p.v);gutter();render()}
-$('#fmt').onclick=()=>act(v=>JSON.stringify(v,null,2));
-$('#min').onclick=()=>act(v=>JSON.stringify(v));
-$('#val').onclick=()=>act();
-$('#sort').onclick=()=>act(v=>JSON.stringify(sortK(v),null,2));
-$('#esc').onclick=()=>{ta.value=JSON.stringify(ta.value);act()};
-$('#unesc').onclick=()=>{try{const s=JSON.parse(ta.value.trim());if(typeof s==='string')ta.value=s}catch{ta.value=ta.value.replace(/\\n/g,'\n').replace(/\\t/g,'\t').replace(/\\"/g,'"').replace(/\\\\/g,'\\')}act()};
-ta.oninput=()=>{parse();gutter();render()};ta.onscroll=()=>gut.scrollTop=ta.scrollTop;
-const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
-function tree(v,k){
- const key=k!==undefined?`<span class="text-violet-600">${esc(k)}</span>: `:'';
- if(v&&typeof v==='object'){const a=Array.isArray(v),ks=Object.keys(v);return `<details open class="t ml-3"><summary>${key}<span class="text-slate-400">${a?'[':'{'} ${ks.length} ${a?'items':'keys'}</span></summary>${ks.map(x=>tree(v[x],x)).join('')}</details>`}
- const c=typeof v==='string'?'text-emerald-600':typeof v==='number'?'text-blue-600':'text-orange-600';
- return `<div class="ml-6">${key}<span class="${c}">${esc(JSON.stringify(v))}</span></div>`}
-function yaml(v,ind=''){
- const sc=x=>typeof x==='string'?(/^[\w .\/-]+$/.test(x)&&!/^(true|false|null|\d.*)$/.test(x)?x:JSON.stringify(x)):String(x);
- if(Array.isArray(v))return v.length?v.map(x=>x&&typeof x==='object'?`${ind}-\n${yaml(x,ind+'  ')}`:`${ind}- ${sc(x)}`).join('\n'):ind+'[]';
- if(v&&typeof v==='object'){const ks=Object.keys(v);return ks.length?ks.map(k=>{const x=v[k];return x&&typeof x==='object'&&Object.keys(x).length?`${ind}${k}:\n${yaml(x,ind+'  ')}`:`${ind}${k}: ${x&&typeof x==='object'?(Array.isArray(x)?'[]':'{}'):sc(x)}`}).join('\n'):ind+'{}'}
- return ind+sc(v)}
-function ts(v){
- const out=[];const cap=s=>s.replace(/(^|[^a-zA-Z0-9]+)(.)/g,(_,__,c)=>c.toUpperCase());
- const T=(x,name)=>{if(x===null)return 'null';if(Array.isArray(x)){if(!x.length)return 'unknown[]';const ts=[...new Set(x.map(i=>T(i,name)))];return (ts.length>1?`(${ts.join(' | ')})`:ts[0])+'[]'}
-  if(typeof x==='object'){const n=cap(name)||'Root';const body=Object.keys(x).map(k=>`  ${/^[a-zA-Z_]\w*$/.test(k)?k:JSON.stringify(k)}: ${T(x[k],k)};`).join('\n');out.push(`interface ${n} {\n${body}\n}`);return n}
-  return typeof x};
- const r=T(v,'Root');return (out.length?out.reverse().join('\n\n'):'')+(/^(string|number|boolean|null)/.test(r)?`type Root = ${r};`:'')}
-function csv(v){
- if(!Array.isArray(v)||!v.every(r=>r&&typeof r==='object'&&!Array.isArray(r)))return 'CSV needs an array of objects.';
- const cols=[...new Set(v.flatMap(Object.keys))],q=x=>{x=x===undefined||x===null?'':typeof x==='object'?JSON.stringify(x):String(x);return /[",\n]/.test(x)?'"'+x.replace(/"/g,'""')+'"':x};
- return [cols.map(q).join(','),...v.map(r=>cols.map(c=>q(r[c])).join(','))].join('\n')}
-function render(){
- const view=$('#view');let p;try{p={v:JSON.parse(ta.value)}}catch{view.innerHTML='<p class="text-red-600">Fix the JSON error to see output.</p>';out='';return}
- if(mode==='tree'){view.innerHTML=tree(p.v);out=JSON.stringify(p.v,null,2);return}
- out=mode==='yaml'?yaml(p.v):mode==='ts'?ts(p.v):csv(p.v);view.innerHTML=`<pre class="whitespace-pre">${esc(out)}</pre>`}
-document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=b.dataset.t;render()});
-$('#copy').onclick=e=>{navigator.clipboard.writeText(out);e.target.textContent='Copied!';setTimeout(()=>e.target.textContent='Copy output',1200)};
-parse();gutter();render();
-</script></body></html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>
+      JSON Formatter - Free JSON Validator, Formatter & Minifier | Offline & Open Source
+    </title>
+    <meta
+      name="description"
+      content="Format, minify, validate and sort JSON. Explore a collapsible tree and convert to YAML, TypeScript interfaces and CSV. Private and offline."
+    />
+    <link rel="canonical" href="https://json-formatter.zenyukti.in/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="ZenYukti Labs" />
+    <meta property="og:title" content="JSON Formatter - Format, Validate & Convert JSON" />
+    <meta
+      property="og:description"
+      content="Format, minify, validate and sort JSON. Explore a collapsible tree and convert to YAML, TypeScript interfaces and CSV. Private and offline."
+    />
+    <meta property="og:url" content="https://json-formatter.zenyukti.in/" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "JSON Formatter",
+        "url": "https://json-formatter.zenyukti.in",
+        "description": "Format, minify, validate and sort JSON. Explore a collapsible tree and convert to YAML, TypeScript interfaces and CSV. Private and offline.",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Any",
+        "browserRequirements": "Requires a modern browser with JavaScript enabled.",
+        "isAccessibleForFree": true,
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "author": { "@type": "Organization", "name": "ZenYukti Labs", "url": "https://zenyukti.in" }
+      }
+    </script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style type="text/tailwindcss">
+      body {
+        font-family: Inter, system-ui, sans-serif;
+        @apply bg-slate-50 text-slate-900;
+      }
+      .btn {
+        @apply rounded-xl bg-slate-900 px-3 py-1.5 text-xs font-medium text-white hover:bg-slate-700;
+      }
+      .btn2 {
+        @apply rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium hover:bg-slate-100;
+      }
+      .card {
+        @apply rounded-2xl border border-slate-200 bg-white p-5;
+      }
+      .tab {
+        @apply rounded-lg px-3 py-1 text-xs font-medium text-slate-500;
+      }
+      .tab.on {
+        @apply bg-slate-900 text-white;
+      }
+      #gut,
+      #ta {
+        font-family: ui-monospace, Menlo, monospace;
+        font-size: 12px;
+        line-height: 20px;
+        padding: 8px;
+      }
+      details.t > summary {
+        cursor: pointer;
+        list-style: none;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="border-b bg-white">
+      <div class="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
+        <a href="https://zenyukti.in" class="font-semibold">ZenYukti Labs</a>
+        <div class="flex items-center gap-3 text-sm">
+          <span class="rounded-full bg-emerald-50 text-emerald-700 px-3 py-1 text-xs font-medium">
+            100% Private
+          </span>
+          <a class="text-slate-600 hover:text-slate-900" href="https://github.com/ZenYukti">
+            GitHub
+          </a>
+        </div>
+      </div>
+    </header>
+    <main class="max-w-6xl mx-auto px-4 py-10">
+      <h1 class="text-3xl md:text-4xl font-bold tracking-tight">JSON Formatter</h1>
+      <p class="mt-2 text-slate-600 max-w-2xl">
+        Beautify, minify, validate and convert JSON without sending it anywhere.
+      </p>
+      <div class="grid lg:grid-cols-2 gap-6 mt-8">
+        <div class="card">
+          <div class="flex flex-wrap gap-2 mb-3">
+            <button class="btn" id="fmt">Format</button>
+            <button class="btn2" id="min">Minify</button>
+            <button class="btn2" id="val">Validate</button>
+            <button class="btn2" id="sort">Sort keys</button>
+            <button class="btn2" id="esc">Escape</button>
+            <button class="btn2" id="unesc">Unescape</button>
+          </div>
+          <div class="flex rounded-xl border border-slate-200 overflow-hidden h-80">
+            <div
+              id="gut"
+              class="bg-slate-50 text-slate-400 text-right select-none overflow-hidden w-12 shrink-0 whitespace-pre"
+            ></div>
+            <textarea
+              id="ta"
+              spellcheck="false"
+              wrap="off"
+              class="flex-1 outline-none resize-none"
+            ></textarea>
+          </div>
+          <p id="msg" class="text-xs mt-2 min-h-[1rem]"></p>
+        </div>
+        <div class="card">
+          <div class="flex gap-1 mb-3">
+            <button class="tab on" data-t="tree">Tree</button>
+            <button class="tab" data-t="yaml">YAML</button>
+            <button class="tab" data-t="ts">TypeScript</button>
+            <button class="tab" data-t="csv">CSV</button>
+          </div>
+          <div id="view" class="overflow-auto h-80 text-xs font-mono"></div>
+          <button id="copy" class="btn mt-3">Copy output</button>
+        </div>
+      </div>
+      <section class="mt-16">
+        <h2 class="text-2xl font-bold mb-4">FAQ</h2>
+        <div class="space-y-3">
+          <details class="card">
+            <summary class="font-medium cursor-pointer">How do I format JSON online?</summary>
+            <p class="mt-2 text-sm text-slate-600">
+              Paste your JSON on the left and press Format. It is re-indented with two spaces.
+            </p>
+          </details>
+          <details class="card">
+            <summary class="font-medium cursor-pointer">Is my JSON uploaded?</summary>
+            <p class="mt-2 text-sm text-slate-600">
+              No. Everything runs in your browser using JSON.parse; there are no network calls.
+            </p>
+          </details>
+          <details class="card">
+            <summary class="font-medium cursor-pointer">How are errors reported?</summary>
+            <p class="mt-2 text-sm text-slate-600">
+              The parser message is shown and the offending line number is highlighted in red in the
+              gutter.
+            </p>
+          </details>
+          <details class="card">
+            <summary class="font-medium cursor-pointer">What does Sort keys do?</summary>
+            <p class="mt-2 text-sm text-slate-600">
+              It alphabetically sorts object keys recursively, useful for diffs and stable output.
+            </p>
+          </details>
+          <details class="card">
+            <summary class="font-medium cursor-pointer">When does CSV conversion work?</summary>
+            <p class="mt-2 text-sm text-slate-600">
+              When the root is an array of objects. Nested values are serialised as JSON strings.
+            </p>
+          </details>
+        </div>
+      </section>
+    </main>
+    <footer class="border-t bg-white mt-16">
+      <div class="max-w-6xl mx-auto px-4 py-8 text-sm text-slate-500 space-y-2">
+        <p>Built by ZenYukti Labs • Open Source MIT</p>
+        <p class="flex flex-wrap gap-4">
+          <a href="https://zenyukti.in" class="hover:text-slate-900">zenyukti.in</a>
+          <a href="https://github.com/zenyukti-labs/dev-tools" class="hover:text-slate-900">
+            GitHub
+          </a>
+          <a href="https://go.zenyukti.in/discord" class="hover:text-slate-900">
+            go.zenyukti.in/discord
+          </a>
+          <a href="https://twitter.com/zenyukti" class="hover:text-slate-900">@zenyukti</a>
+        </p>
+      </div>
+    </footer>
+    <script>
+      const $ = (s) => document.querySelector(s),
+        ta = $('#ta'),
+        gut = $('#gut');
+      let mode = 'tree',
+        errLine = 0,
+        out = '';
+      const SAMPLE = {
+        name: 'ZenYukti Labs',
+        tools: [
+          { slug: 'json', private: true },
+          { slug: 'qr', private: true },
+        ],
+        version: 1.2,
+      };
+      ta.value = JSON.stringify(SAMPLE, null, 2);
+      function gutter() {
+        const n = ta.value.split('\n').length;
+        gut.innerHTML = Array.from({ length: n }, (_, i) =>
+          i + 1 === errLine
+            ? `<span style="color:#dc2626;font-weight:700;background:#fee2e2;display:block">${i + 1}</span>`
+            : `<span style="display:block">${i + 1}</span>`,
+        ).join('');
+        gut.scrollTop = ta.scrollTop;
+      }
+      function parse() {
+        try {
+          const v = JSON.parse(ta.value);
+          errLine = 0;
+          $('#msg').className = 'text-xs mt-2 text-emerald-600';
+          $('#msg').textContent = '✓ Valid JSON';
+          return { v };
+        } catch (e) {
+          const m = /position (\d+)/.exec(e.message);
+          errLine = m ? ta.value.slice(0, +m[1]).split('\n').length : 1;
+          $('#msg').className = 'text-xs mt-2 text-red-600';
+          $('#msg').textContent = e.message;
+          return null;
+        }
+      }
+      const sortK = (v) =>
+        Array.isArray(v)
+          ? v.map(sortK)
+          : v && typeof v === 'object'
+            ? Object.fromEntries(
+                Object.keys(v)
+                  .sort()
+                  .map((k) => [k, sortK(v[k])]),
+              )
+            : v;
+      function act(fn) {
+        const p = parse();
+        if (p && fn) ta.value = fn(p.v);
+        gutter();
+        render();
+      }
+      $('#fmt').onclick = () => act((v) => JSON.stringify(v, null, 2));
+      $('#min').onclick = () => act((v) => JSON.stringify(v));
+      $('#val').onclick = () => act();
+      $('#sort').onclick = () => act((v) => JSON.stringify(sortK(v), null, 2));
+      $('#esc').onclick = () => {
+        ta.value = JSON.stringify(ta.value);
+        act();
+      };
+      $('#unesc').onclick = () => {
+        try {
+          const s = JSON.parse(ta.value.trim());
+          if (typeof s === 'string') ta.value = s;
+        } catch {
+          ta.value = ta.value
+            .replace(/\\n/g, '\n')
+            .replace(/\\t/g, '\t')
+            .replace(/\\"/g, '"')
+            .replace(/\\\\/g, '\\');
+        }
+        act();
+      };
+      ta.oninput = () => {
+        parse();
+        gutter();
+        render();
+      };
+      ta.onscroll = () => (gut.scrollTop = ta.scrollTop);
+      const esc = (s) =>
+        String(s).replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[c]);
+      function tree(v, k) {
+        const key = k !== undefined ? `<span class="text-violet-600">${esc(k)}</span>: ` : '';
+        if (v && typeof v === 'object') {
+          const a = Array.isArray(v),
+            ks = Object.keys(v);
+          return `<details open class="t ml-3"><summary>${key}<span class="text-slate-400">${a ? '[' : '{'} ${ks.length} ${a ? 'items' : 'keys'}</span></summary>${ks.map((x) => tree(v[x], x)).join('')}</details>`;
+        }
+        const c =
+          typeof v === 'string'
+            ? 'text-emerald-600'
+            : typeof v === 'number'
+              ? 'text-blue-600'
+              : 'text-orange-600';
+        return `<div class="ml-6">${key}<span class="${c}">${esc(JSON.stringify(v))}</span></div>`;
+      }
+      function yaml(v, ind = '') {
+        const sc = (x) =>
+          typeof x === 'string'
+            ? /^[\w .\/-]+$/.test(x) && !/^(true|false|null|\d.*)$/.test(x)
+              ? x
+              : JSON.stringify(x)
+            : String(x);
+        if (Array.isArray(v))
+          return v.length
+            ? v
+                .map((x) =>
+                  x && typeof x === 'object'
+                    ? `${ind}-\n${yaml(x, ind + '  ')}`
+                    : `${ind}- ${sc(x)}`,
+                )
+                .join('\n')
+            : ind + '[]';
+        if (v && typeof v === 'object') {
+          const ks = Object.keys(v);
+          return ks.length
+            ? ks
+                .map((k) => {
+                  const x = v[k];
+                  return x && typeof x === 'object' && Object.keys(x).length
+                    ? `${ind}${k}:\n${yaml(x, ind + '  ')}`
+                    : `${ind}${k}: ${x && typeof x === 'object' ? (Array.isArray(x) ? '[]' : '{}') : sc(x)}`;
+                })
+                .join('\n')
+            : ind + '{}';
+        }
+        return ind + sc(v);
+      }
+      function ts(v) {
+        const out = [];
+        const cap = (s) => s.replace(/(^|[^a-zA-Z0-9]+)(.)/g, (_, __, c) => c.toUpperCase());
+        const T = (x, name) => {
+          if (x === null) return 'null';
+          if (Array.isArray(x)) {
+            if (!x.length) return 'unknown[]';
+            const ts = [...new Set(x.map((i) => T(i, name)))];
+            return (ts.length > 1 ? `(${ts.join(' | ')})` : ts[0]) + '[]';
+          }
+          if (typeof x === 'object') {
+            const n = cap(name) || 'Root';
+            const body = Object.keys(x)
+              .map((k) => `  ${/^[a-zA-Z_]\w*$/.test(k) ? k : JSON.stringify(k)}: ${T(x[k], k)};`)
+              .join('\n');
+            out.push(`interface ${n} {\n${body}\n}`);
+            return n;
+          }
+          return typeof x;
+        };
+        const r = T(v, 'Root');
+        return (
+          (out.length ? out.reverse().join('\n\n') : '') +
+          (/^(string|number|boolean|null)/.test(r) ? `type Root = ${r};` : '')
+        );
+      }
+      function csv(v) {
+        if (!Array.isArray(v) || !v.every((r) => r && typeof r === 'object' && !Array.isArray(r)))
+          return 'CSV needs an array of objects.';
+        const cols = [...new Set(v.flatMap(Object.keys))],
+          q = (x) => {
+            x =
+              x === undefined || x === null
+                ? ''
+                : typeof x === 'object'
+                  ? JSON.stringify(x)
+                  : String(x);
+            return /[",\n]/.test(x) ? '"' + x.replace(/"/g, '""') + '"' : x;
+          };
+        return [cols.map(q).join(','), ...v.map((r) => cols.map((c) => q(r[c])).join(','))].join(
+          '\n',
+        );
+      }
+      function render() {
+        const view = $('#view');
+        let p;
+        try {
+          p = { v: JSON.parse(ta.value) };
+        } catch {
+          view.innerHTML = '<p class="text-red-600">Fix the JSON error to see output.</p>';
+          out = '';
+          return;
+        }
+        if (mode === 'tree') {
+          view.innerHTML = tree(p.v);
+          out = JSON.stringify(p.v, null, 2);
+          return;
+        }
+        out = mode === 'yaml' ? yaml(p.v) : mode === 'ts' ? ts(p.v) : csv(p.v);
+        view.innerHTML = `<pre class="whitespace-pre">${esc(out)}</pre>`;
+      }
+      document.querySelectorAll('.tab').forEach(
+        (b) =>
+          (b.onclick = () => {
+            document.querySelectorAll('.tab').forEach((x) => x.classList.remove('on'));
+            b.classList.add('on');
+            mode = b.dataset.t;
+            render();
+          }),
+      );
+      $('#copy').onclick = (e) => {
+        navigator.clipboard.writeText(out);
+        e.target.textContent = 'Copied!';
+        setTimeout(() => (e.target.textContent = 'Copy output'), 1200);
+      };
+      parse();
+      gutter();
+      render();
+    </script>
+  </body>
+</html>

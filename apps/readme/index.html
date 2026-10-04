@@ -1,102 +1,389 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>README Generator - Free GitHub README Generator | Offline & Open Source</title>
-<meta name="description" content="Generate a professional GitHub README.md with badges, tech stack, features and 6 themes. Live preview, copy and download.">
-<link rel="canonical" href="https://readme-generator.zenyukti.in/">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="ZenYukti Labs">
-<meta property="og:title" content="README Generator - Free GitHub README Maker">
-<meta property="og:description" content="Generate a professional GitHub README.md with badges, tech stack, features and 6 themes. Live preview, copy and download.">
-<meta property="og:url" content="https://readme-generator.zenyukti.in/">
-<meta name="twitter:card" content="summary_large_image">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "README Generator", "url": "https://readme-generator.zenyukti.in", "description": "Generate a professional GitHub README.md with badges, tech stack, features and 6 themes. Live preview, copy and download.", "applicationCategory": "DeveloperApplication", "operatingSystem": "Any", "browserRequirements": "Requires a modern browser with JavaScript enabled.", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "author": {"@type": "Organization", "name": "ZenYukti Labs", "url": "https://zenyukti.in"}}</script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-<style type="text/tailwindcss">
-body{font-family:Inter,system-ui,sans-serif;@apply bg-slate-50 text-slate-900}
-.inp{@apply w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-slate-900}
-.btn{@apply rounded-xl bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700}
-.btn2{@apply rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium hover:bg-slate-100}
-.card{@apply rounded-2xl border border-slate-200 bg-white p-5}
-.lbl{@apply mb-1 mt-3 block text-xs font-medium text-slate-500}
-.tab{@apply rounded-lg px-3 py-1 text-xs font-medium text-slate-500}
-.tab.on{@apply bg-slate-900 text-white}
-.chip{@apply cursor-pointer rounded-full border border-slate-200 px-3 py-1 text-xs}
-.chip.on{@apply bg-slate-900 text-white border-slate-900}
-.md h1{@apply text-2xl font-bold mb-2 mt-4}.md h2{@apply text-xl font-semibold mt-5 mb-2 border-b pb-1}.md h3{@apply font-semibold mt-3}
-.md p{@apply my-2 text-sm}.md ul{@apply list-disc pl-5 text-sm}.md pre{@apply bg-slate-900 text-slate-100 rounded-xl p-3 text-xs overflow-auto my-2}
-.md code{@apply text-xs}.md img{display:inline-block}.md blockquote{@apply border-l-4 pl-3 text-slate-500}
-.md table{@apply text-sm my-2}.md td,.md th{@apply border px-2 py-1}
-</style></head>
-<body>
-<header class="border-b bg-white"><div class="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
-<a href="https://zenyukti.in" class="font-semibold">ZenYukti Labs</a>
-<div class="flex items-center gap-3 text-sm"><span class="rounded-full bg-emerald-50 text-emerald-700 px-3 py-1 text-xs font-medium">100% Private</span><a class="text-slate-600 hover:text-slate-900" href="https://github.com/ZenYukti">GitHub</a></div></div></header>
-<main class="max-w-6xl mx-auto px-4 py-10">
-<h1 class="text-3xl md:text-4xl font-bold tracking-tight">README Generator</h1>
-<p class="mt-2 text-slate-600 max-w-2xl">Fill in a few fields, pick a theme, and get a polished README.md for your project.</p>
-<div class="grid lg:grid-cols-2 gap-6 mt-8">
-<div class="card">
- <label class="lbl !mt-0">Theme</label><div id="themes" class="flex flex-wrap gap-2"></div>
- <label class="lbl">Project name</label><input id="name" class="inp" value="My Project">
- <label class="lbl">Tagline</label><input id="tag" class="inp" value="A short, catchy tagline">
- <label class="lbl">Description</label><textarea id="desc" rows="3" class="inp">What it does and why it exists.</textarea>
- <label class="lbl">Repository URL</label><input id="repo" class="inp" value="https://github.com/username/my-project">
- <label class="lbl">Badges</label><div id="badges" class="flex flex-wrap gap-2"></div>
- <label class="lbl">Tech stack</label><div id="stack" class="flex flex-wrap gap-2"></div>
- <label class="lbl">Features</label><div class="flex gap-2"><input id="feat" class="inp" placeholder="Add a feature"><button id="addf" class="btn2">Add</button></div><ul id="flist" class="mt-2 space-y-1 text-sm"></ul>
- <label class="lbl">Installation</label><textarea id="inst" rows="3" class="inp font-mono text-xs">git clone https://github.com/username/my-project
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>README Generator - Free GitHub README Generator | Offline & Open Source</title>
+    <meta
+      name="description"
+      content="Generate a professional GitHub README.md with badges, tech stack, features and 6 themes. Live preview, copy and download."
+    />
+    <link rel="canonical" href="https://readme-generator.zenyukti.in/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="ZenYukti Labs" />
+    <meta property="og:title" content="README Generator - Free GitHub README Maker" />
+    <meta
+      property="og:description"
+      content="Generate a professional GitHub README.md with badges, tech stack, features and 6 themes. Live preview, copy and download."
+    />
+    <meta property="og:url" content="https://readme-generator.zenyukti.in/" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "README Generator",
+        "url": "https://readme-generator.zenyukti.in",
+        "description": "Generate a professional GitHub README.md with badges, tech stack, features and 6 themes. Live preview, copy and download.",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Any",
+        "browserRequirements": "Requires a modern browser with JavaScript enabled.",
+        "isAccessibleForFree": true,
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "author": { "@type": "Organization", "name": "ZenYukti Labs", "url": "https://zenyukti.in" }
+      }
+    </script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style type="text/tailwindcss">
+      body {
+        font-family: Inter, system-ui, sans-serif;
+        @apply bg-slate-50 text-slate-900;
+      }
+      .inp {
+        @apply w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-slate-900;
+      }
+      .btn {
+        @apply rounded-xl bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700;
+      }
+      .btn2 {
+        @apply rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium hover:bg-slate-100;
+      }
+      .card {
+        @apply rounded-2xl border border-slate-200 bg-white p-5;
+      }
+      .lbl {
+        @apply mb-1 mt-3 block text-xs font-medium text-slate-500;
+      }
+      .tab {
+        @apply rounded-lg px-3 py-1 text-xs font-medium text-slate-500;
+      }
+      .tab.on {
+        @apply bg-slate-900 text-white;
+      }
+      .chip {
+        @apply cursor-pointer rounded-full border border-slate-200 px-3 py-1 text-xs;
+      }
+      .chip.on {
+        @apply bg-slate-900 text-white border-slate-900;
+      }
+      .md h1 {
+        @apply text-2xl font-bold mb-2 mt-4;
+      }
+      .md h2 {
+        @apply text-xl font-semibold mt-5 mb-2 border-b pb-1;
+      }
+      .md h3 {
+        @apply font-semibold mt-3;
+      }
+      .md p {
+        @apply my-2 text-sm;
+      }
+      .md ul {
+        @apply list-disc pl-5 text-sm;
+      }
+      .md pre {
+        @apply bg-slate-900 text-slate-100 rounded-xl p-3 text-xs overflow-auto my-2;
+      }
+      .md code {
+        @apply text-xs;
+      }
+      .md img {
+        display: inline-block;
+      }
+      .md blockquote {
+        @apply border-l-4 pl-3 text-slate-500;
+      }
+      .md table {
+        @apply text-sm my-2;
+      }
+      .md td,
+      .md th {
+        @apply border px-2 py-1;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="border-b bg-white">
+      <div class="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
+        <a href="https://zenyukti.in" class="font-semibold">ZenYukti Labs</a>
+        <div class="flex items-center gap-3 text-sm">
+          <span class="rounded-full bg-emerald-50 text-emerald-700 px-3 py-1 text-xs font-medium">
+            100% Private
+          </span>
+          <a class="text-slate-600 hover:text-slate-900" href="https://github.com/ZenYukti">
+            GitHub
+          </a>
+        </div>
+      </div>
+    </header>
+    <main class="max-w-6xl mx-auto px-4 py-10">
+      <h1 class="text-3xl md:text-4xl font-bold tracking-tight">README Generator</h1>
+      <p class="mt-2 text-slate-600 max-w-2xl">
+        Fill in a few fields, pick a theme, and get a polished README.md for your project.
+      </p>
+      <div class="grid lg:grid-cols-2 gap-6 mt-8">
+        <div class="card">
+          <label class="lbl !mt-0">Theme</label>
+          <div id="themes" class="flex flex-wrap gap-2"></div>
+          <label class="lbl">Project name</label>
+          <input id="name" class="inp" value="My Project" />
+          <label class="lbl">Tagline</label>
+          <input id="tag" class="inp" value="A short, catchy tagline" />
+          <label class="lbl">Description</label>
+          <textarea id="desc" rows="3" class="inp">What it does and why it exists.</textarea>
+          <label class="lbl">Repository URL</label>
+          <input id="repo" class="inp" value="https://github.com/username/my-project" />
+          <label class="lbl">Badges</label>
+          <div id="badges" class="flex flex-wrap gap-2"></div>
+          <label class="lbl">Tech stack</label>
+          <div id="stack" class="flex flex-wrap gap-2"></div>
+          <label class="lbl">Features</label>
+          <div class="flex gap-2">
+            <input id="feat" class="inp" placeholder="Add a feature" />
+            <button id="addf" class="btn2">Add</button>
+          </div>
+          <ul id="flist" class="mt-2 space-y-1 text-sm"></ul>
+          <label class="lbl">Installation</label>
+          <textarea id="inst" rows="3" class="inp font-mono text-xs">
+git clone https://github.com/username/my-project
 cd my-project
 npm install</textarea>
- <label class="lbl">Usage</label><textarea id="usage" rows="3" class="inp font-mono text-xs">npm run dev</textarea>
-</div>
-<div class="card lg:sticky lg:top-4 self-start">
- <div class="flex justify-between items-center mb-3"><div class="flex gap-1"><button class="tab on" data-v="prev">Preview</button><button class="tab" data-v="raw">Raw Markdown</button></div><div class="flex gap-2"><button id="copy" class="btn2">Copy</button><button id="dl" class="btn">Download README.md</button></div></div>
- <div id="prev" class="md overflow-auto max-h-[70vh]"></div><textarea id="raw" readonly class="hidden w-full h-[70vh] rounded-xl border p-3 font-mono text-xs"></textarea>
-</div></div>
-<section class="mt-16"><h2 class="text-2xl font-bold mb-4">FAQ</h2><div class="space-y-3">
-<details class="card"><summary class="font-medium cursor-pointer">What makes a good README?</summary><p class="mt-2 text-sm text-slate-600">A clear description, install steps, usage examples, features and contribution/license info.</p></details>
-<details class="card"><summary class="font-medium cursor-pointer">Is my project info stored?</summary><p class="mt-2 text-sm text-slate-600">No. Everything stays in this page; nothing is sent or saved.</p></details>
-<details class="card"><summary class="font-medium cursor-pointer">How are badges generated?</summary><p class="mt-2 text-sm text-slate-600">They are standard shields.io image links built from your repository URL.</p></details>
-<details class="card"><summary class="font-medium cursor-pointer">How do the themes differ?</summary><p class="mt-2 text-sm text-slate-600">Each theme changes structure and tone, from a minimal one-pager to a docs-heavy layout with a table of contents.</p></details>
-<details class="card"><summary class="font-medium cursor-pointer">Can I edit the output?</summary><p class="mt-2 text-sm text-slate-600">Yes, copy or download the markdown and edit it in your repo.</p></details>
-</div></section>
-</main>
-<footer class="border-t bg-white mt-16"><div class="max-w-6xl mx-auto px-4 py-8 text-sm text-slate-500 space-y-2">
-<p>Built by ZenYukti Labs • Open Source MIT</p>
-<p class="flex flex-wrap gap-4"><a href="https://zenyukti.in" class="hover:text-slate-900">zenyukti.in</a><a href="https://github.com/zenyukti-labs/dev-tools" class="hover:text-slate-900">GitHub</a><a href="https://go.zenyukti.in/discord" class="hover:text-slate-900">go.zenyukti.in/discord</a><a href="https://twitter.com/zenyukti" class="hover:text-slate-900">@zenyukti</a></p>
-</div></footer>
-<script>
-const $=s=>document.querySelector(s);
-const THEMES=['Minimal','Professional','Open Source Standard','Fancy Banner','Startup Pitch','Docs Heavy'];
-const BADGES=['build','npm','license','stars'],STACK=['React','Vue','Svelte','Next.js','Node.js','TypeScript','Python','Go','Rust','Tailwind CSS','Docker','PostgreSQL'];
-const S={theme:'Professional',badges:new Set(['license','stars']),stack:new Set(['React','Tailwind CSS']),feats:['Fast and lightweight','Privacy friendly']};
-function chips(id,items,set,single){$(id).innerHTML='';items.forEach(i=>{const b=document.createElement('button');b.type='button';b.textContent=i;b.className='chip'+((single?S.theme===i:set.has(i))?' on':'');
- b.onclick=()=>{if(single)S.theme=i;else set.has(i)?set.delete(i):set.add(i);chips(id,items,set,single);gen()};$(id).appendChild(b)})}
-function repoPath(){try{return new URL($('#repo').value).pathname.slice(1).replace(/\/$/,'')}catch{return 'username/repo'}}
-function badge(t){const p=repoPath(),n=$('#name').value.toLowerCase().replace(/\s+/g,'-');
- return {build:`![Build](https://img.shields.io/github/actions/workflow/status/${p}/ci.yml?style=flat-square)`,npm:`![npm](https://img.shields.io/npm/v/${n}?style=flat-square)`,license:`![License](https://img.shields.io/github/license/${p}?style=flat-square)`,stars:`![Stars](https://img.shields.io/github/stars/${p}?style=flat-square)`}[t]}
-function renderFeats(){$('#flist').innerHTML='';S.feats.forEach((f,i)=>{const li=document.createElement('li');li.className='flex justify-between rounded-lg bg-slate-50 px-3 py-1';li.innerHTML='<span></span><button class="text-red-500 text-xs">Remove</button>';li.firstChild.textContent=f;li.lastChild.onclick=()=>{S.feats.splice(i,1);renderFeats();gen()};$('#flist').appendChild(li)})}
-function gen(){
- const n=$('#name').value,tag=$('#tag').value,d=$('#desc').value,r=$('#repo').value,ins=$('#inst').value,us=$('#usage').value;
- const bd=BADGES.filter(b=>S.badges.has(b)).map(badge).join(' '),st=[...S.stack],ft=S.feats.map(f=>'- '+f).join('\n');
- const stackL=st.map(s=>`\`${s}\``).join(' · '),code=(x)=>'```bash\n'+x+'\n```';
- const sec=(h,b)=>b?`## ${h}\n\n${b}\n\n`:'';
- let m='';
- switch(S.theme){
- case 'Minimal':m=`# ${n}\n\n${tag}\n\n${d}\n\n${sec('Install',code(ins))}${sec('Usage',code(us))}`;break;
- case 'Open Source Standard':m=`# ${n}\n\n${bd}\n\n> ${tag}\n\n${d}\n\n${sec('Features',ft)}${sec('Tech Stack',stackL)}${sec('Getting Started','### Installation\n\n'+code(ins)+'\n\n### Usage\n\n'+code(us))}${sec('Contributing','Contributions are welcome! Please open an issue or submit a pull request.')}${sec('License','Distributed under the MIT License.')}`;break;
- case 'Fancy Banner':m=`<div align="center">\n\n# ✨ ${n} ✨\n\n**${tag}**\n\n${bd}\n\n[Repository](${r}) · [Report Bug](${r}/issues) · [Request Feature](${r}/issues)\n\n</div>\n\n---\n\n${d}\n\n${sec('🚀 Features',ft)}${sec('🛠 Built With',stackL)}${sec('📦 Installation',code(ins))}${sec('💡 Usage',code(us))}---\n\n<p align="center">Made with ❤️</p>\n`;break;
- case 'Startup Pitch':m=`# ${n}\n\n### ${tag}\n\n${bd}\n\n## The problem\n\n${d}\n\n## The solution\n\n${ft}\n\n## Try it in 60 seconds\n\n${code(ins+'\n'+us)}\n\n## Under the hood\n\n${stackL}\n\n## Join us\n\nStar the repo and tell a friend: ${r}\n`;break;
- case 'Docs Heavy':m=`# ${n}\n\n${tag}\n\n${bd}\n\n## Table of Contents\n\n- [About](#about)\n- [Features](#features)\n- [Tech Stack](#tech-stack)\n- [Installation](#installation)\n- [Usage](#usage)\n- [Contributing](#contributing)\n- [License](#license)\n\n## About\n\n${d}\n\n## Features\n\n${ft}\n\n## Tech Stack\n\n| Technology |\n| --- |\n${st.map(s=>`| ${s} |`).join('\n')}\n\n## Installation\n\n${code(ins)}\n\n## Usage\n\n${code(us)}\n\n## Contributing\n\nSee CONTRIBUTING.md.\n\n## License\n\nMIT\n`;break;
- default:m=`# ${n}\n\n${bd}\n\n${tag}\n\n${d}\n\n${sec('Features',ft)}${sec('Tech Stack',stackL)}${sec('Installation',code(ins))}${sec('Usage',code(us))}${sec('License','MIT')}`}
- $('#raw').value=m;$('#prev').innerHTML=window.marked?marked.parse(m):'<pre>'+m.replace(/</g,'&lt;')+'</pre>'}
-chips('#themes',THEMES,null,true);chips('#badges',BADGES,S.badges);chips('#stack',STACK,S.stack);renderFeats();
-document.querySelectorAll('input.inp,textarea.inp').forEach(i=>i.addEventListener('input',gen));
-$('#addf').onclick=()=>{const v=$('#feat').value.trim();if(v){S.feats.push(v);$('#feat').value='';renderFeats();gen()}};
-document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));b.classList.add('on');$('#prev').classList.toggle('hidden',b.dataset.v!=='prev');$('#raw').classList.toggle('hidden',b.dataset.v!=='raw')});
-$('#copy').onclick=e=>{navigator.clipboard.writeText($('#raw').value);e.target.textContent='Copied!';setTimeout(()=>e.target.textContent='Copy',1200)};
-$('#dl').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([$('#raw').value],{type:'text/markdown'}));a.download='README.md';a.click()};
-gen();
-</script></body></html>
+          <label class="lbl">Usage</label>
+          <textarea id="usage" rows="3" class="inp font-mono text-xs">npm run dev</textarea>
+        </div>
+        <div class="card lg:sticky lg:top-4 self-start">
+          <div class="flex justify-between items-center mb-3">
+            <div class="flex gap-1">
+              <button class="tab on" data-v="prev">Preview</button>
+              <button class="tab" data-v="raw">Raw Markdown</button>
+            </div>
+            <div class="flex gap-2">
+              <button id="copy" class="btn2">Copy</button>
+              <button id="dl" class="btn">Download README.md</button>
+            </div>
+          </div>
+          <div id="prev" class="md overflow-auto max-h-[70vh]"></div>
+          <textarea
+            id="raw"
+            readonly
+            class="hidden w-full h-[70vh] rounded-xl border p-3 font-mono text-xs"
+          ></textarea>
+        </div>
+      </div>
+      <section class="mt-16">
+        <h2 class="text-2xl font-bold mb-4">FAQ</h2>
+        <div class="space-y-3">
+          <details class="card">
+            <summary class="font-medium cursor-pointer">What makes a good README?</summary>
+            <p class="mt-2 text-sm text-slate-600">
+              A clear description, install steps, usage examples, features and contribution/license
+              info.
+            </p>
+          </details>
+          <details class="card">
+            <summary class="font-medium cursor-pointer">Is my project info stored?</summary>
+            <p class="mt-2 text-sm text-slate-600">
+              No. Everything stays in this page; nothing is sent or saved.
+            </p>
+          </details>
+          <details class="card">
+            <summary class="font-medium cursor-pointer">How are badges generated?</summary>
+            <p class="mt-2 text-sm text-slate-600">
+              They are standard shields.io image links built from your repository URL.
+            </p>
+          </details>
+          <details class="card">
+            <summary class="font-medium cursor-pointer">How do the themes differ?</summary>
+            <p class="mt-2 text-sm text-slate-600">
+              Each theme changes structure and tone, from a minimal one-pager to a docs-heavy layout
+              with a table of contents.
+            </p>
+          </details>
+          <details class="card">
+            <summary class="font-medium cursor-pointer">Can I edit the output?</summary>
+            <p class="mt-2 text-sm text-slate-600">
+              Yes, copy or download the markdown and edit it in your repo.
+            </p>
+          </details>
+        </div>
+      </section>
+    </main>
+    <footer class="border-t bg-white mt-16">
+      <div class="max-w-6xl mx-auto px-4 py-8 text-sm text-slate-500 space-y-2">
+        <p>Built by ZenYukti Labs • Open Source MIT</p>
+        <p class="flex flex-wrap gap-4">
+          <a href="https://zenyukti.in" class="hover:text-slate-900">zenyukti.in</a>
+          <a href="https://github.com/zenyukti-labs/dev-tools" class="hover:text-slate-900">
+            GitHub
+          </a>
+          <a href="https://go.zenyukti.in/discord" class="hover:text-slate-900">
+            go.zenyukti.in/discord
+          </a>
+          <a href="https://twitter.com/zenyukti" class="hover:text-slate-900">@zenyukti</a>
+        </p>
+      </div>
+    </footer>
+    <script>
+      const $ = (s) => document.querySelector(s);
+      const THEMES = [
+        'Minimal',
+        'Professional',
+        'Open Source Standard',
+        'Fancy Banner',
+        'Startup Pitch',
+        'Docs Heavy',
+      ];
+      const BADGES = ['build', 'npm', 'license', 'stars'],
+        STACK = [
+          'React',
+          'Vue',
+          'Svelte',
+          'Next.js',
+          'Node.js',
+          'TypeScript',
+          'Python',
+          'Go',
+          'Rust',
+          'Tailwind CSS',
+          'Docker',
+          'PostgreSQL',
+        ];
+      const S = {
+        theme: 'Professional',
+        badges: new Set(['license', 'stars']),
+        stack: new Set(['React', 'Tailwind CSS']),
+        feats: ['Fast and lightweight', 'Privacy friendly'],
+      };
+      function chips(id, items, set, single) {
+        $(id).innerHTML = '';
+        items.forEach((i) => {
+          const b = document.createElement('button');
+          b.type = 'button';
+          b.textContent = i;
+          b.className = 'chip' + ((single ? S.theme === i : set.has(i)) ? ' on' : '');
+          b.onclick = () => {
+            if (single) S.theme = i;
+            else set.has(i) ? set.delete(i) : set.add(i);
+            chips(id, items, set, single);
+            gen();
+          };
+          $(id).appendChild(b);
+        });
+      }
+      function repoPath() {
+        try {
+          return new URL($('#repo').value).pathname.slice(1).replace(/\/$/, '');
+        } catch {
+          return 'username/repo';
+        }
+      }
+      function badge(t) {
+        const p = repoPath(),
+          n = $('#name').value.toLowerCase().replace(/\s+/g, '-');
+        return {
+          build: `![Build](https://img.shields.io/github/actions/workflow/status/${p}/ci.yml?style=flat-square)`,
+          npm: `![npm](https://img.shields.io/npm/v/${n}?style=flat-square)`,
+          license: `![License](https://img.shields.io/github/license/${p}?style=flat-square)`,
+          stars: `![Stars](https://img.shields.io/github/stars/${p}?style=flat-square)`,
+        }[t];
+      }
+      function renderFeats() {
+        $('#flist').innerHTML = '';
+        S.feats.forEach((f, i) => {
+          const li = document.createElement('li');
+          li.className = 'flex justify-between rounded-lg bg-slate-50 px-3 py-1';
+          li.innerHTML = '<span></span><button class="text-red-500 text-xs">Remove</button>';
+          li.firstChild.textContent = f;
+          li.lastChild.onclick = () => {
+            S.feats.splice(i, 1);
+            renderFeats();
+            gen();
+          };
+          $('#flist').appendChild(li);
+        });
+      }
+      function gen() {
+        const n = $('#name').value,
+          tag = $('#tag').value,
+          d = $('#desc').value,
+          r = $('#repo').value,
+          ins = $('#inst').value,
+          us = $('#usage').value;
+        const bd = BADGES.filter((b) => S.badges.has(b))
+            .map(badge)
+            .join(' '),
+          st = [...S.stack],
+          ft = S.feats.map((f) => '- ' + f).join('\n');
+        const stackL = st.map((s) => `\`${s}\``).join(' · '),
+          code = (x) => '```bash\n' + x + '\n```';
+        const sec = (h, b) => (b ? `## ${h}\n\n${b}\n\n` : '');
+        let m = '';
+        switch (S.theme) {
+          case 'Minimal':
+            m = `# ${n}\n\n${tag}\n\n${d}\n\n${sec('Install', code(ins))}${sec('Usage', code(us))}`;
+            break;
+          case 'Open Source Standard':
+            m = `# ${n}\n\n${bd}\n\n> ${tag}\n\n${d}\n\n${sec('Features', ft)}${sec('Tech Stack', stackL)}${sec('Getting Started', '### Installation\n\n' + code(ins) + '\n\n### Usage\n\n' + code(us))}${sec('Contributing', 'Contributions are welcome! Please open an issue or submit a pull request.')}${sec('License', 'Distributed under the MIT License.')}`;
+            break;
+          case 'Fancy Banner':
+            m = `<div align="center">\n\n# ✨ ${n} ✨\n\n**${tag}**\n\n${bd}\n\n[Repository](${r}) · [Report Bug](${r}/issues) · [Request Feature](${r}/issues)\n\n</div>\n\n---\n\n${d}\n\n${sec('🚀 Features', ft)}${sec('🛠 Built With', stackL)}${sec('📦 Installation', code(ins))}${sec('💡 Usage', code(us))}---\n\n<p align="center">Made with ❤️</p>\n`;
+            break;
+          case 'Startup Pitch':
+            m = `# ${n}\n\n### ${tag}\n\n${bd}\n\n## The problem\n\n${d}\n\n## The solution\n\n${ft}\n\n## Try it in 60 seconds\n\n${code(ins + '\n' + us)}\n\n## Under the hood\n\n${stackL}\n\n## Join us\n\nStar the repo and tell a friend: ${r}\n`;
+            break;
+          case 'Docs Heavy':
+            m = `# ${n}\n\n${tag}\n\n${bd}\n\n## Table of Contents\n\n- [About](#about)\n- [Features](#features)\n- [Tech Stack](#tech-stack)\n- [Installation](#installation)\n- [Usage](#usage)\n- [Contributing](#contributing)\n- [License](#license)\n\n## About\n\n${d}\n\n## Features\n\n${ft}\n\n## Tech Stack\n\n| Technology |\n| --- |\n${st.map((s) => `| ${s} |`).join('\n')}\n\n## Installation\n\n${code(ins)}\n\n## Usage\n\n${code(us)}\n\n## Contributing\n\nSee CONTRIBUTING.md.\n\n## License\n\nMIT\n`;
+            break;
+          default:
+            m = `# ${n}\n\n${bd}\n\n${tag}\n\n${d}\n\n${sec('Features', ft)}${sec('Tech Stack', stackL)}${sec('Installation', code(ins))}${sec('Usage', code(us))}${sec('License', 'MIT')}`;
+        }
+        $('#raw').value = m;
+        $('#prev').innerHTML = window.marked
+          ? marked.parse(m)
+          : '<pre>' + m.replace(/</g, '&lt;') + '</pre>';
+      }
+      chips('#themes', THEMES, null, true);
+      chips('#badges', BADGES, S.badges);
+      chips('#stack', STACK, S.stack);
+      renderFeats();
+      document
+        .querySelectorAll('input.inp,textarea.inp')
+        .forEach((i) => i.addEventListener('input', gen));
+      $('#addf').onclick = () => {
+        const v = $('#feat').value.trim();
+        if (v) {
+          S.feats.push(v);
+          $('#feat').value = '';
+          renderFeats();
+          gen();
+        }
+      };
+      document.querySelectorAll('.tab').forEach(
+        (b) =>
+          (b.onclick = () => {
+            document.querySelectorAll('.tab').forEach((x) => x.classList.remove('on'));
+            b.classList.add('on');
+            $('#prev').classList.toggle('hidden', b.dataset.v !== 'prev');
+            $('#raw').classList.toggle('hidden', b.dataset.v !== 'raw');
+          }),
+      );
+      $('#copy').onclick = (e) => {
+        navigator.clipboard.writeText($('#raw').value);
+        e.target.textContent = 'Copied!';
+        setTimeout(() => (e.target.textContent = 'Copy'), 1200);
+      };
+      $('#dl').onclick = () => {
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(new Blob([$('#raw').value], { type: 'text/markdown' }));
+        a.download = 'README.md';
+        a.click();
+      };
+      gen();
+    </script>
+  </body>
+</html>

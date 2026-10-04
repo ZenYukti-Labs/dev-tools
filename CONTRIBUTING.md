@@ -19,6 +19,7 @@ Thank you for considering contributing to **ZenYukti Labs - dev-tools**! This is
 ```
 
 Each app is self-contained:
+
 ```
 apps/qr/
 ├── index.html         # entire app - html + css + js in one file
@@ -107,6 +108,7 @@ npm run build --workspace=apps/my-tool
 > ```
 >
 > Once merged to `main`, the maintainer will:
+>
 > 1. Create new Pages project (`my-tool`)
 > 2. Set build command `npm run build --workspace=apps/my-tool`
 > 3. Set output `apps/my-tool/dist`
@@ -133,9 +135,9 @@ Each app's `vite.config.ts` does only this:
 export default {
   build: {
     outDir: 'dist',
-    rollupOptions: { input: './index.html' }
-  }
-}
+    rollupOptions: { input: './index.html' },
+  },
+};
 ```
 
 Vite copies `index.html` -> `dist/index.html`. No bundling needed.
@@ -144,15 +146,15 @@ Vite copies `index.html` -> `dist/index.html`. No bundling needed.
 
 We use **separate Cloudflare Pages projects** connected to same repo `ZenYukti-Labs/dev-tools`.
 
-| App | Pages Project | Custom Domain | Output |
-|-----|---------------|---------------|--------|
-| qr | qr-generator | qr-generator.zenyukti.in | apps/qr/dist |
-| json | json-formatter | json-formatter.zenyukti.in | apps/json/dist |
-| og-preview | og-preview | og-preview.zenyukti.in | apps/og-preview/dist |
-| utm | utm-builder | utm-builder.zenyukti.in | apps/utm/dist |
-| image | image-optimizer | image-optimizer.zenyukti.in | apps/image/dist |
-| favicon | favicon-generator | favicon-generator.zenyukti.in | apps/favicon/dist |
-| readme | readme-generator | readme-generator.zenyukti.in | apps/readme/dist |
+| App        | Pages Project     | Custom Domain                 | Output               |
+| ---------- | ----------------- | ----------------------------- | -------------------- |
+| qr         | qr-generator      | qr-generator.zenyukti.in      | apps/qr/dist         |
+| json       | json-formatter    | json-formatter.zenyukti.in    | apps/json/dist       |
+| og-preview | og-preview        | og-preview.zenyukti.in        | apps/og-preview/dist |
+| utm        | utm-builder       | utm-builder.zenyukti.in       | apps/utm/dist        |
+| image      | image-optimizer   | image-optimizer.zenyukti.in   | apps/image/dist      |
+| favicon    | favicon-generator | favicon-generator.zenyukti.in | apps/favicon/dist    |
+| readme     | readme-generator  | readme-generator.zenyukti.in  | apps/readme/dist     |
 
 All auto-deploy on push to `main`. See `CLOUDFLARE_SETUP.md` for detailed setup.
 
@@ -170,8 +172,8 @@ All auto-deploy on push to `main`. See `CLOUDFLARE_SETUP.md` for detailed setup.
 3. Run `npm run build:all` - must pass for all projects
 4. Ensure no `node_modules` or `dist` is committed
 5. Open MR/PR to `main`
-6. **If it's a NEW tool:** Tag @ayushHardeniya in MR description for Pages + DNS provisioning. 
-Existing tools auto-deploy via preview URL, new tools need manual DNS step and will go live only after maintainer approval post-merge.
+6. **If it's a NEW tool:** Tag @ayushHardeniya in MR description for Pages + DNS provisioning.
+   Existing tools auto-deploy via preview URL, new tools need manual DNS step and will go live only after maintainer approval post-merge.
 
 ## Important Notes
 
