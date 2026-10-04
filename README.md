@@ -1,80 +1,126 @@
-# ZenYukti Dev Tools - 7 Free Offline Open Source Tools
+<p align="center">
+  <img src="assets/dev-tools-banner.png" alt="dev-tools — By ZenYukti Labs" width="100%">
+</p>
 
-Open-source, 100% client-side developer tools. Each tool is a standalone product with its own subdomain, SEO identity, and can rank independently on Google. No backend, no uploads, no tracking.
+<h3 align="center">
+  Focused, free, open-source developer utilities.
+</h3>
 
-| Tool              | Name              | Subdomain                                                                | Local Port | Keyword            |
-| ----------------- | ----------------- | ------------------------------------------------------------------------ | ---------- | ------------------ |
-| QR Code Generator | QR Code Generator | [`qr-generator.zenyukti.in`](https://qr-generator.zenyukti.in)           | 5173       | qr code generator  |
-| JSON Formatter    | JSON Formatter    | [`json-formatter.zenyukti.in`](https://json-formatter.zenyukti.in)       | 5174       | json formatter     |
-| OG Preview Tool   | OG Preview Tool   | [`og-preview.zenyukti.in`](https://og-preview.zenyukti.in)               | 5175       | open graph preview |
-| UTM Builder       | UTM Builder       | [`utm-builder.zenyukti.in`](https://utm-builder.zenyukti.in)             | 5176       | utm builder        |
-| Image Optimizer   | Image Optimizer   | [`image-optimizer.zenyukti.in`](https://image-optimizer.zenyukti.in)     | 5177       | image optimizer    |
-| Favicon Generator | Favicon Generator | [`favicon-generator.zenyukti.in`](https://favicon-generator.zenyukti.in) | 5178       | favicon generator  |
-| README Generator  | README Generator  | [`readme-generator.zenyukti.in`](https://readme-generator.zenyukti.in)   | 5179       | readme generator   |
+<p align="center">
+  <a href="https://labs.zenyukti.in">
+    <img src="https://img.shields.io/badge/ZenYukti_Labs-Visit_Labs-111827?style=flat-square" alt="ZenYukti Labs">
+  </a>
+  <a href="https://github.com/ZenYukti-Labs">
+    <img src="https://img.shields.io/badge/GitHub-Organization-181717?style=flat-square&logo=github&logoColor=white" alt="GitHub">
+  </a>
+  <a href="CONTRIBUTING.md">
+    <img src="https://img.shields.io/badge/Contributing-Guide-2563EB?style=flat-square" alt="Contributing">
+  </a>
+  <a href="https://go.zenyukti.in/discord">
+    <img src="https://img.shields.io/badge/Community-Discord-5865F2?style=flat-square&logo=discord&logoColor=white" alt="ZenYukti Discord Community">
+  </a>
+</p>
 
-## Quick start
+---
+
+## Tools
+
+Each utility is independently accessible and deployable.
+
+| Tool | Description | Live |
+|---|---|---|
+| **QR Studio** | Generate QR codes for URLs, text, Wi-Fi and more. | [Open](https://qr-generator.zenyukti.in) |
+| **JSON Formatter** | Format, validate and inspect JSON with a structured view. | [Open](https://json-formatter.zenyukti.in) |
+| **OG Preview** | Preview how links appear across social platforms and search. | [Open](https://og-preview.zenyukti.in) |
+| **UTM Builder** | Build and inspect campaign URLs without spreadsheets. | [Open](https://utm-builder.zenyukti.in) |
+| **Image Optimizer** | Compress, resize and convert images directly in the browser. | [Open](https://image-optimizer.zenyukti.in) |
+| **Favicon Generator** | Generate favicon assets for websites and applications. | [Open](https://favicon-generator.zenyukti.in) |
+| **README Generator** | Create polished GitHub README files with live preview. | [Open](https://readme-generator.zenyukti.in) |
+
+## Repository
+
+This is a monorepo containing the tools as independent Vite applications.
+
+```text
+dev-tools/
+├── apps/
+│   ├── favicon/
+│   ├── image/
+│   ├── json/
+│   ├── og-preview/
+│   ├── qr/
+│   ├── readme/
+│   └── utm/
+├── scripts/
+├── CONTRIBUTING.md
+├── LICENSE
+├── package.json
+└── README.md
+```
+
+Each application contains its own source, build configuration, and public assets.
+
+## Development
+
+Requirements:
+
+- Node.js
+- npm
+
+Install dependencies:
 
 ```bash
 npm install
-
-npm run dev:all      # starts all 7 tools at once, each on its own port
-npm run dev:qr       # QR Code Generator only, http://localhost:5173
-npm run dev:json     # JSON Formatter only, http://localhost:5174
-npm run dev:og       # OG Preview only, http://localhost:5175
-npm run dev:utm      # UTM Builder only, http://localhost:5176
-npm run dev:image    # Image Optimizer only, http://localhost:5177
-npm run dev:favicon  # Favicon Generator only, http://localhost:5178
-npm run dev:readme   # README Generator only, http://localhost:5179
-
-npm run build:all    # builds every workspace -> apps/*/dist
 ```
 
-## Architecture
+Build the applications using the repository's configured scripts:
 
-- **Monorepo** with 7 apps (`apps/*`), each deployable independently
-- **Each tool is standalone**: Single self-contained `index.html` using Tailwind via CDN and vanilla JavaScript
-- **No dependencies between tools**: Each is fully standalone with its own identity
-- **100% client-side**: No backend, no uploads, no tracking, works offline
-- **Own SEO identity**: Each tool has its own title, meta description, canonical URL, OG tags, and JSON-LD structured data for independent Google ranking
+```bash
+npm run build:all
+```
 
-## Local dev ports
+For development, work from the relevant application directory under `apps/`.
 
-Each workspace owns a fixed port, set in its `vite.config.ts`:
+## Principles
 
-| Workspace         | Dev URL               | Workspace      | Dev URL               |
-| ----------------- | --------------------- | -------------- | --------------------- |
-| `apps/qr`         | http://localhost:5173 | `apps/utm`     | http://localhost:5176 |
-| `apps/json`       | http://localhost:5174 | `apps/image`   | http://localhost:5177 |
-| `apps/og-preview` | http://localhost:5175 | `apps/favicon` | http://localhost:5178 |
-|                   |                       | `apps/readme`  | http://localhost:5179 |
+The tools in this repository are built around a few simple principles:
 
-Ports are `strictPort` - a busy port fails loudly instead of moving the tool to a different URL.
+- **Focused** — solve a specific problem without unnecessary complexity.
+- **Fast** — keep interactions responsive and lightweight.
+- **Private** — prefer browser-side processing and data minimization where practical.
+- **Accessible** — build interfaces that remain usable with different input methods and devices.
+- **Open** — keep the implementation available for inspection, contribution, and reuse.
+- **Free** — core functionality remains freely accessible.
 
-## Deployment
+Individual tools may differ in their implementation and processing model; see the relevant application for its specific behaviour.
 
-This single repo powers **7 subdomains** as **7 separate Cloudflare Pages projects**. Each tool builds independently from the same repository.
+## Contributing
 
-- Build command: `npm run build --workspace=apps/<tool-name>`
-- Output directory: `apps/<tool-name>/dist`
-- Custom domain: Set the corresponding subdomain (e.g., [`qr-generator.zenyukti.in`](https://qr-generator.zenyukti.in))
+Contributions are welcome.
 
-## SEO Goal
+For changes:
 
-Each tool has an independent identity optimized to rank #1 for its keyword:
+1. Check existing issues and discussions.
+2. Before creating a PR, an [issue](https://github.com/ZenYukti-Labs/dev-tools/issues) must be created and assigned.
+3. Keep the change scoped to the relevant application.
+4. Avoid unnecessary dependencies or external services.
+5. Test the affected application locally.
+6. Update relevant documentation when behaviour changes.
 
-- [QR Code Generator](https://qr-generator.zenyukti.in) → rank #1 for "qr code generator"
-- [JSON Formatter](https://json-formatter.zenyukti.in) → rank #1 for "json formatter"
-- [OG Preview Tool](https://og-preview.zenyukti.in) → rank #1 for "open graph preview"
-- [UTM Builder](https://utm-builder.zenyukti.in) → rank #1 for "utm builder"
-- [Image Optimizer](https://image-optimizer.zenyukti.in) → rank #1 for "image optimizer"
-- [Favicon Generator](https://favicon-generator.zenyukti.in) → rank #1 for "favicon generator"
-- [README Generator](https://readme-generator.zenyukti.in) → rank #1 for "readme generator"
+See [CONTRIBUTING.md](CONTRIBUTING.md) for repository contribution guidance.
 
-**Note:** The main website `labs.zenyukti.in` lives in a separate repository (`zenyukti-labs/zenyukti-labs`) and acts as a hub that links to these tools.
+## ZenYukti Labs
 
-## Tech
+This repository is part of **ZenYukti Labs**, the software arm of [ZenYukti](https://zenyukti.in).
 
-- Vanilla JavaScript + Tailwind CSS (via CDN)
-- Vite for dev server and build
-- 100% static HTML output
-- [MIT licensed](LICENSE)
+Explore the wider Labs ecosystem, projects, and software at [labs.zenyukti.in](https://labs.zenyukti.in).
+
+## Legal & community
+
+- [Privacy](https://zenyukti.in/privacy)
+- [Terms](https://zenyukti.in/terms)
+- [Code of Conduct](https://zenyukti.in/code-of-conduct)
+
+## License
+
+See [LICENSE](LICENSE) for the applicable license.
