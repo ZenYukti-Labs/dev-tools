@@ -4,13 +4,13 @@ Open-source, 100% client-side developer tools. Each tool is a standalone product
 
 | Tool | Name | Subdomain | Local Port | Keyword |
 |---|---|---|---|---|
-| QR Code Generator | QR Code Generator | `qr-generator.zenyukti.in` | 5173 | qr code generator |
-| JSON Formatter | JSON Formatter | `json-formatter.zenyukti.in` | 5174 | json formatter |
-| OG Preview Tool | OG Preview Tool | `og-preview.zenyukti.in` | 5175 | open graph preview |
-| UTM Builder | UTM Builder | `utm-builder.zenyukti.in` | 5176 | utm builder |
-| Image Optimizer | Image Optimizer | `image-optimizer.zenyukti.in` | 5177 | image optimizer |
-| Favicon Generator | Favicon Generator | `favicon-generator.zenyukti.in` | 5178 | favicon generator |
-| README Generator | README Generator | `readme-generator.zenyukti.in` | 5179 | readme generator |
+| QR Code Generator | QR Code Generator | [`qr-generator.zenyukti.in`](https://qr-generator.zenyukti.in) | 5173 | qr code generator |
+| JSON Formatter | JSON Formatter | [`json-formatter.zenyukti.in`](https://json-formatter.zenyukti.in) | 5174 | json formatter |
+| OG Preview Tool | OG Preview Tool | [`og-preview.zenyukti.in`](https://og-preview.zenyukti.in) | 5175 | open graph preview |
+| UTM Builder | UTM Builder | [`utm-builder.zenyukti.in`](https://utm-builder.zenyukti.in) | 5176 | utm builder |
+| Image Optimizer | Image Optimizer | [`image-optimizer.zenyukti.in`](https://image-optimizer.zenyukti.in) | 5177 | image optimizer |
+| Favicon Generator | Favicon Generator | [`favicon-generator.zenyukti.in`](https://favicon-generator.zenyukti.in) | 5178 | favicon generator |
+| README Generator | README Generator | [`readme-generator.zenyukti.in`](https://readme-generator.zenyukti.in) | 5179 | readme generator |
 
 ## Quick start
 
@@ -56,18 +56,18 @@ This single repo powers **7 subdomains** as **7 separate Cloudflare Pages projec
 
 - Build command: `npm run build --workspace=apps/<tool-name>`
 - Output directory: `apps/<tool-name>/dist`
-- Custom domain: Set the corresponding subdomain (e.g., `qr-generator.zenyukti.in`)
+- Custom domain: Set the corresponding subdomain (e.g., [`qr-generator.zenyukti.in`](https://qr-generator.zenyukti.in))
 
 ## SEO Goal
 
 Each tool has an independent identity optimized to rank #1 for its keyword:
-- QR Code Generator → rank #1 for "qr code generator"
-- JSON Formatter → rank #1 for "json formatter"  
-- OG Preview Tool → rank #1 for "open graph preview"
-- UTM Builder → rank #1 for "utm builder"
-- Image Optimizer → rank #1 for "image optimizer"
-- Favicon Generator → rank #1 for "favicon generator"
-- README Generator → rank #1 for "readme generator"
+- [QR Code Generator](https://qr-generator.zenyukti.in) → rank #1 for "qr code generator"
+- [JSON Formatter](https://json-formatter.zenyukti.in) → rank #1 for "json formatter"  
+- [OG Preview Tool](https://og-preview.zenyukti.in) → rank #1 for "open graph preview"
+- [UTM Builder](https://utm-builder.zenyukti.in) → rank #1 for "utm builder"
+- [Image Optimizer](https://image-optimizer.zenyukti.in) → rank #1 for "image optimizer"
+- [Favicon Generator](https://favicon-generator.zenyukti.in) → rank #1 for "favicon generator"
+- [README Generator](https://readme-generator.zenyukti.in) → rank #1 for "readme generator"
 
 **Note:** The main website `labs.zenyukti.in` lives in a separate repository (`zenyukti-labs/zenyukti-labs`) and acts as a hub that links to these tools.
 

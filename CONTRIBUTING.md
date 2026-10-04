@@ -1,169 +1,184 @@
-# Contributing to Dev Tools
+# Contributing to dev-tools
 
-Thank you for your interest in contributing to Dev Tools! We welcome contributions that improve existing tools, fix bugs, or add new self-contained utilities. 
+Thank you for considering contributing to **ZenYukti Labs - dev-tools**! This is a collection of several independent, zero-dependency developer utilities deployed as separate sites on Cloudflare Pages.
 
-This guide will walk you through the process of contributing effectively to this project.
+## Project Structure
 
----
+```
+.
+├── apps/
+│   ├── favicon/       -> favicon-generator.zenyukti.in
+│   ├── image/         -> image-optimizer.zenyukti.in
+│   ├── json/          -> json-formatter.zenyukti.in
+│   ├── og-preview/    -> og-preview.zenyukti.in
+│   ├── qr/            -> qr-generator.zenyukti.in
+│   ├── readme/        -> readme-generator.zenyukti.in
+│   └── utm/           -> utm-builder.zenyukti.in
+├── package.json       # workspace root (npm workspaces)
+└── package-lock.json
+```
 
-## Table of Contents
+Each app is self-contained:
+```
+apps/qr/
+├── index.html         # entire app - html + css + js in one file
+├── vite.config.ts     # copies index.html -> dist/
+├── package.json
+└── dist/index.html    # build output (gitignored locally, built on CF)
+```
 
-- [Code of Conduct](#code-of-conduct)
-- [Before You Start](#before-you-start)
-- [Reporting Bugs, Issues, or Improvements](#reporting-bugs-issues-or-improvements)
-- [Development Setup](#development-setup)
-- [Adding a New Tool](#adding-a-new-tool)
-- [Submitting Changes](#submitting-changes)
-- [Style Guidelines](#style-guidelines)
-- [Testing & Verification](#testing--verification)
+## Tech Stack
 
----
+- **No frameworks** - Vanilla HTML, CSS, JS in a single `index.html`
+- **Vite 5** - only for build step (`vite build` copies index.html to dist)
+- **npm workspaces** - monorepo management
+- **Cloudflare Pages** - hosting (separate Pages projects, monorepo)
 
-## Code of Conduct
+## Prerequisites
 
-By participating in this project, you agree to maintain a respectful, inclusive, and collaborative environment. Be kind, constructive, and focus on improving the project for everyone.
+- Node.js 20+
+- npm 10+
 
----
+## Getting Started
 
-## Before You Start
+```bash
+# Clone
+git clone https://github.com/ZenYukti-Labs/dev-tools.git
+cd dev-tools
 
-**All contributions must start with an issue.** We do not accept unsolicited pull requests.
+# Install all workspaces
+npm install
 
-- **For new tools:** Open an [issue](https://github.com/ZenYukti-Labs/dev-tools/issues/new) proposing the tool. Wait to be assigned before starting implementation or opening a PR.
-- **For bugs, fixes, UI changes, or functionality improvements to existing tools:** Open an [issue](https://github.com/ZenYukti-Labs/dev-tools/issues/new) first describing the problem/idea. Wait to be assigned before opening a PR.
+# Run any tool locally
+npx vite apps/qr --open
+# or just open apps/qr/index.html directly in browser
 
-This helps avoid duplicate work, ensures alignment with project goals, and keeps the review process efficient.
+# Build all
+npm run build:all
 
----
+# Build single
+npm run build --workspace=apps/qr and so on
+```
 
-## Reporting Bugs, Issues, or Improvements
+> **Note:** `apps/*/dist` is built output. Don't edit it directly. It's auto-generated and ignored in git, but Cloudflare builds it on deploy.
 
-If you find a bug or have a suggestion, please [create an issue](https://github.com/ZenYukti-Labs/dev-tools/issues/new).
+## Development Workflow
 
-When creating an issue, include as much detail as possible:
+1. Pick a tool in `apps/<tool>/index.html`
+2. Edit the single `index.html` - keep everything inline (no external deps)
+3. Test locally by opening the file or via `npx vite apps/<tool>`
+4. Build to verify: `npm run build --workspace=apps/<tool>`
+5. Commit and push - Cloudflare auto-deploys
 
-- **Title:** A clear, descriptive title
-- **Description:** What is happening vs. what you expected to happen
-- **Steps to Reproduce:** Clear, numbered steps (if reporting a bug)
-- **Screenshots/Recordings:** If it's a UI issue, include visuals
-- **Environment:** Browser, OS, and any relevant details
-- **Proposed Solution:** Optional, but helpful if you have ideas
+### Rules for Tools
 
----
-
-## Development Setup
-
-1. **Fork** the repository on GitHub
-2. **Clone** your fork locally:
-   ```bash
-   git clone https://github.com/<your-username>/dev-tools.git
-   cd dev-tools
-   ```
-3. **Install dependencies:**
-   ```bash
-   npm install
-   ```
-4. **Start development server** (for previewing changes):
-   ```bash
-   npm run dev
-   ```
-
----
+- **Single file**: All logic must live in `index.html` (HTML + `<style>` + `<script>`)
+- **Zero dependency**: No CDN libraries, no npm deps for runtime
+- **Offline first**: Must work without internet (except OG preview which fetches URLs)
+- **< 20KB**: Keep it lightweight. Gzipped should be < 7KB
+- **No tracking**: No analytics, no cookies
 
 ## Adding a New Tool
 
-All tools in this project are **100% client-side, self-contained, and static**. Follow these steps carefully when adding a new tool:
+```bash
+# 1. Create app folder
+mkdir apps/my-tool
+cd apps/my-tool
 
-### 1. Open an Issue First (Required)
-- [Create an issue](https://github.com/ZenYukti-Labs/dev-tools/issues/new) proposing your new tool.
-- Wait until a maintainer **assigns** the issue to you before writing code or creating a PR.
+# 2. Create package.json (copy from apps/qr/package.json and rename)
+# 3. Create vite.config.ts (copy from apps/qr/vite.config.ts)
+# 4. Create index.html with your tool
 
-### 2. Create the Tool Files
-- Create a new directory: `apps/<slug>/`
-- Add `apps/<slug>/index.html` as a **single, self-contained file** (no external build dependencies required for the tool itself).
-- Add its own `package.json` and `vite.config.ts` inside the tool's directory as needed.
-- Ensure the tool runs entirely in the browser with no server-side dependencies.
+# 5. Register in root package.json workspaces
+# Add "apps/my-tool" to workspaces array
 
-### 3. Follow Required Structure
-Your `index.html` must include:
-- Standard header and footer (consistent with existing tools)
-- An `<h1>` with the tool name
-- A clear description of what the tool does
-- A **5-question FAQ** section
-- Proper SEO metadata for the tool's own domain:
-  - `title` tag
-  - `meta name="description"`
-  - `link rel="canonical"`
-  - `meta property="og:url"`
-  - JSON-LD `SoftwareApplication` schema
+# 6. Install & build
+cd ../..
+npm install
+npm run build --workspace=apps/my-tool
+```
 
-### 4. Register the Tool
-- Add the tool to `labs/src/components/gallery/tools.js` with the following fields:
-  - `slug`
-  - `domain`
-  - `name`
-  - `tag`
-  - `description`
-  - `gradient`
+> [!IMPORTANT]
+> **Deployment is maintainer-only**
+> Cloudflare Pages + DNS is managed by the maintainer. After you open your MR/PR, tag **[@ayushHardeniya](https://github.com/ayushHardeniya)** in the MR description / issue and write:
+>
+> ```
+> New tool: my-tool — ready for Pages project + DNS setup
+> ```
+>
+> Once merged to `main`, the maintainer will:
+> 1. Create new Pages project (`my-tool`)
+> 2. Set build command `npm run build --workspace=apps/my-tool`
+> 3. Set output `apps/my-tool/dist`
+> 4. Add custom domain `my-tool.zenyukti.in` (auto CNAME)
+>
+> Your code will go live after that step. Preview deployments still work for testing without DNS.
 
-### 5. Update Deployment Configuration
-- Add a row for the new domain to `CLOUDFLARE_SETUP.md` following the existing format.
+## Build System
 
-### 6. Verify Your Changes
-Before committing, run the required verification commands (see [Testing & Verification](#testing--verification)).
+Root `package.json` scripts:
 
----
+```json
+{
+  "scripts": {
+    "build:all": "npm run build --workspaces --if-present",
+    "dev:qr": "vite apps/qr"
+  }
+}
+```
 
-## Submitting Changes
+Each app's `vite.config.ts` does only this:
 
-1. **Create a feature branch** from your fork:
-   ```bash
-   git checkout -b feat/<short-description>
-   # or fix/<short-description> for bugs
-   ```
-2. **Make your changes** following this guide and the existing code style.
-3. **Test and verify** locally (see [Testing & Verification](#testing--verification)). Both commands must pass.
-4. **Commit your changes** with a clear, descriptive commit message.
-5. **Push to your fork:**
-   ```bash
-   git push origin feat/<short-description>
-   ```
-6. **Open a Pull Request** against the `main` branch of this repository.
-7. **Reference the issue** in your PR description (e.g., `Closes #123` or `Fixes #123`). Only open a PR if the corresponding issue is assigned to you.
+```ts
+export default {
+  build: {
+    outDir: 'dist',
+    rollupOptions: { input: './index.html' }
+  }
+}
+```
 
----
+Vite copies `index.html` -> `dist/index.html`. No bundling needed.
 
-## Style Guidelines
+## Deployment
 
-- **Self-contained:** Each tool must be a single HTML file with inline styles/scripts where appropriate. Avoid unnecessary external dependencies.
-- **Client-side only:** Tools must work 100% in the browser. No server-side processing.
-- **Consistency:** Match the structure, naming conventions, and UI patterns of existing tools.
-- **Accessibility:** Use semantic HTML and consider readability, contrast, and keyboard navigation.
-- **No unnecessary comments:** Follow the project's code style - avoid adding comments unless explicitly required for clarity.
-- **Keep it minimal:** Focus on solving the problem cleanly and simply.
+We use **separate Cloudflare Pages projects** connected to same repo `ZenYukti-Labs/dev-tools`.
 
----
+| App | Pages Project | Custom Domain | Output |
+|-----|---------------|---------------|--------|
+| qr | qr-generator | qr-generator.zenyukti.in | apps/qr/dist |
+| json | json-formatter | json-formatter.zenyukti.in | apps/json/dist |
+| og-preview | og-preview | og-preview.zenyukti.in | apps/og-preview/dist |
+| utm | utm-builder | utm-builder.zenyukti.in | apps/utm/dist |
+| image | image-optimizer | image-optimizer.zenyukti.in | apps/image/dist |
+| favicon | favicon-generator | favicon-generator.zenyukti.in | apps/favicon/dist |
+| readme | readme-generator | readme-generator.zenyukti.in | apps/readme/dist |
 
-## Testing & Verification
+All auto-deploy on push to `main`. See `CLOUDFLARE_SETUP.md` for detailed setup.
 
-Before opening a PR, you **must** verify your changes pass all required checks:
+## Commit Conventions
 
-1. **Build all apps:**
-   ```bash
-   npm run build:all
-   ```
-   This must complete successfully with no errors.
+- `feat: add <tool> - description`
+- `fix: sync lock file after removing labs`
+- `chore: clean repo to dev-tools only`
+- `docs: update readme with independent domains`
 
-2. **Run the cleanup/audit script:**
-   ```bash
-   bash scripts/remove-*.sh
-   ```
-   This must pass with no legacy references found.
+## Pull Request Process
 
-3. **Manual testing:** Test your tool (or fixes) in the browser to ensure it works as expected across common viewports.
+1. Fork and create branch: `feat/my-tool` or `fix/qr-bug`
+2. Make changes in `apps/<tool>/index.html` only (unless adding new tool)
+3. Run `npm run build:all` - must pass for all projects
+4. Ensure no `node_modules` or `dist` is committed
+5. Open MR/PR to `main`
+6. **If it's a NEW tool:** Tag @ayushHardeniya in MR description for Pages + DNS provisioning. 
+Existing tools auto-deploy via preview URL, new tools need manual DNS step and will go live only after maintainer approval post-merge.
 
-If either command fails, fix the issues before submitting your PR.
+## Important Notes
 
----
+- **Never commit `dist/` or `node_modules/`** - `.gitignore` covers this
+- **Keep lock file in sync** - after adding/removing workspaces, run `rm package-lock.json && npm install` and commit new lock file. Cloudflare uses `npm ci` which fails if lock is out of sync
+- **One tool = One domain** - no shared routing, each is independent static site
 
-Thank you for contributing to Dev Tools! If you have questions at any point, feel free to ask in the relevant issue or ask here [go.zenyukti.in/discord](https://go.zenyukti.in/discord)
+## License
+
+By contributing, you agree your contributions will be licensed under the same [LICENSE](LICENSE) as the project.
